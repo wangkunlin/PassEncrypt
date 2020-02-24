@@ -33,7 +33,7 @@ publish {
     publishVersion = pubVersion
     uploadName = groupName + ':' + artifactName
     desc = 'a gradle plugin to handle annotation'
-    website = 'https://github.com/wangkunlin/PassEncode'
+    website = 'https://github.com/wangkunlin/PassEncrypt.git'
     bintrayUser = getPropertyFromLocalProperties('bintray.user')
     bintrayKey = getPropertyFromLocalProperties('bintray.apikey')
     dryRun = false

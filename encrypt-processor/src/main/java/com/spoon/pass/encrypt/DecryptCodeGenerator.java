@@ -1,8 +1,5 @@
 package com.spoon.pass.encrypt;
 
-import com.spoon.pass.decode.Encode;
-import com.spoon.pass.decode.EncodeDecode;
-import com.spoon.pass.decode.EncodeField;
 import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.TypeName;
@@ -45,7 +42,7 @@ class DecryptCodeGenerator {
 
 
     private TypeSpec generateTypeCode(TypeElement typeElement, List<VariableElement> fields) {
-        Encode encode = typeElement.getAnnotation(Encode.class);
+        Encrypt encode = typeElement.getAnnotation(Encrypt.class);
 
         String password = encode.value();
 
@@ -61,10 +58,10 @@ class DecryptCodeGenerator {
         List<FieldSpec> fieldSpecs = new ArrayList<>();
 
         for (VariableElement field : fields) {
-            EncodeField fieldAnno = field.getAnnotation(EncodeField.class);
+            EncryptField fieldAnno = field.getAnnotation(EncryptField.class);
             String toEncode = fieldAnno.value();
 
-            String encodedStr = EncodeDecode.encode(toEncode, password);
+            String encodedStr = EncryptDecrypt.encode(toEncode, password);
 
             TypeName typeName = TypeName.get(String.class);
 
@@ -73,7 +70,7 @@ class DecryptCodeGenerator {
             FieldSpec.Builder fieldSpec = FieldSpec.builder(typeName, fieldName,
                     Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL);
 
-            fieldSpec.initializer("$1T.decode($2S, $3S)", EncodeDecode.class, encodedStr, password);
+            fieldSpec.initializer("$1T.decode($2S, $3S)", EncryptDecrypt.class, encodedStr, password);
             fieldSpec.addJavadoc("$L", toEncode);
             fieldSpecs.add(fieldSpec.build());
         }

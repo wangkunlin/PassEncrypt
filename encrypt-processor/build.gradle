@@ -6,7 +6,7 @@ dependencies {
 
     implementation 'com.squareup:javapoet:1.12.1'
 
-    implementation 'com.spoon.encoder:decode-lib:0.0.2'
+    implementation 'com.wcg.field.encrypt:encrypt-api:0.0.1'
 }
 
 def getPropertyFromLocalProperties(key) {
@@ -31,7 +31,7 @@ publish {
     publishVersion = pubVersion
     uploadName = groupName + ':' + artifactName
     desc = 'a gradle plugin to handle annotation'
-    website = 'https://github.com/wangkunlin/PassEncode'
+    website = 'https://github.com/wangkunlin/PassEncrypt.git'
     bintrayUser = getPropertyFromLocalProperties('bintray.user')
     bintrayKey = getPropertyFromLocalProperties('bintray.apikey')
     dryRun = false

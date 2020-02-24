@@ -1,24 +1,24 @@
 package com.spoon.pass.passencode;
 
-import com.spoon.pass.decode.EncodeField;
-import com.spoon.pass.decode.Encode;
+import com.spoon.pass.encrypt.Encrypt;
+import com.spoon.pass.encrypt.EncryptField;
 
 /**
  * Created by wangkunlin
  * On 2020-02-21
  */
-@Encode("mypassword")
+@Encrypt("mypassword")
 class UrlConstant {
 
-    @EncodeField("https://www.google.com")
+    @EncryptField("https://www.google.com")
     String CONFIG_URL = "";
 
-    @EncodeField("https://www.google.com1")
+    @EncryptField("https://www.google.com1")
     String new_url = "";
 
-    @EncodeField("https://www.google.com2")
+    @EncryptField("https://www.google.com2")
     String new_url1 = "";
 
-    @EncodeField("https://www.google.com3")
+    @EncryptField("https://www.google.com3")
     String new_url2 = "";
 }

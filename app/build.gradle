@@ -31,7 +31,7 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.1.0'
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
 
-    implementation 'com.spoon.encoder:decode-lib:0.0.2'
+    implementation 'com.wcg.field.encrypt:encrypt-api:0.0.1'
 
     annotationProcessor 'com.spoon.encoder:spoon-encoder:0.0.1'
 }

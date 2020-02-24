@@ -1,7 +1,5 @@
 package com.spoon.pass.encrypt;
 
-import com.spoon.pass.decode.Encode;
-
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -43,13 +41,13 @@ public class EncryptProcessor extends AbstractProcessor {
     @Override
     public Set<String> getSupportedAnnotationTypes() {
         Set<String> annotations = new HashSet<>();
-        annotations.add(Encode.class.getCanonicalName());
+        annotations.add(Encrypt.class.getCanonicalName());
         return annotations;
     }
 
     @Override
     public boolean process(Set<? extends TypeElement> set, RoundEnvironment environment) {
-        Set<? extends Element> elements = environment.getElementsAnnotatedWith(Encode.class);
+        Set<? extends Element> elements = environment.getElementsAnnotatedWith(Encrypt.class);
         for (Element element : elements) {
             if (!Utils.isValidClass(element)) {
                 continue;
