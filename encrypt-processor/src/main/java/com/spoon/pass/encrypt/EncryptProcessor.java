@@ -1,5 +1,11 @@
 package com.spoon.pass.encrypt;
 
+import com.sun.source.util.Trees;
+
+import net.ltgt.gradle.incap.IncrementalAnnotationProcessor;
+import net.ltgt.gradle.incap.IncrementalAnnotationProcessorType;
+
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -19,11 +25,14 @@ import javax.lang.model.util.Elements;
  * Created by wangkunlin
  * On 2020-02-22
  */
+@IncrementalAnnotationProcessor(IncrementalAnnotationProcessorType.DYNAMIC)
 public class EncryptProcessor extends AbstractProcessor {
 
     private Elements mElements;
 
     private DecryptCodeGenerator mCodeGenerator;
+
+    private Trees mTrees;
 
     @Override
     public synchronized void init(ProcessingEnvironment environment) {
@@ -31,11 +40,37 @@ public class EncryptProcessor extends AbstractProcessor {
         mElements = environment.getElementUtils();
         Filer filer = environment.getFiler();
         mCodeGenerator = new DecryptCodeGenerator(mElements, filer);
+
+        try {
+            mTrees = Trees.instance(processingEnv);
+        } catch (IllegalArgumentException ignored) {
+            try {
+                // Get original ProcessingEnvironment from Gradle-wrapped one or KAPT-wrapped one.
+                for (Field field : processingEnv.getClass().getDeclaredFields()) {
+                    if (field.getName().equals("delegate") || field.getName().equals("processingEnv")) {
+                        field.setAccessible(true);
+                        ProcessingEnvironment javacEnv = (ProcessingEnvironment) field.get(processingEnv);
+                        mTrees = Trees.instance(javacEnv);
+                        break;
+                    }
+                }
+            } catch (Throwable ignored2) {
+            }
+        }
+    }
+
+    @Override
+    public Set<String> getSupportedOptions() {
+        Set<String> options = new HashSet<>();
+        if (mTrees != null) {
+            options.add(IncrementalAnnotationProcessorType.ISOLATING.getProcessorOption());
+        }
+        return options;
     }
 
     @Override
     public SourceVersion getSupportedSourceVersion() {
-        return SourceVersion.RELEASE_6;
+        return SourceVersion.latestSupported();
     }
 
     @Override

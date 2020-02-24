@@ -7,6 +7,12 @@ dependencies {
     implementation 'com.squareup:javapoet:1.12.1'
 
     implementation 'com.wcg.field.encrypt:encrypt-api:0.0.1'
+
+    compileOnly files(org.gradle.internal.jvm.Jvm.current().getToolsJar())
+
+    implementation 'net.ltgt.gradle.incap:incap:0.2'
+
+    annotationProcessor 'net.ltgt.gradle.incap:incap-processor:0.2'
 }
 
 def getPropertyFromLocalProperties(key) {
@@ -22,7 +28,7 @@ def groupName = 'com.wcg.field.encrypt'
 
 def artifactName = 'encrypt-processor'
 
-def pubVersion = '0.0.1'
+def pubVersion = '0.0.2'
 
 publish {
     userOrg = 'wangkunlin1992'

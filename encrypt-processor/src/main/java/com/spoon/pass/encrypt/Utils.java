@@ -1,7 +1,5 @@
 package com.spoon.pass.encrypt;
 
-import com.spoon.pass.decode.EncodeField;
-
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.TypeElement;
@@ -23,7 +21,7 @@ class Utils {
             return false;
         }
 
-        EncodeField fieldAnno = element.getAnnotation(EncodeField.class);
+        EncryptField fieldAnno = element.getAnnotation(EncryptField.class);
         return fieldAnno != null;
     }
 
