@@ -1,0 +1,40 @@
+apply plugin: 'java-library'
+apply plugin: 'com.novoda.bintray-release'
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+    implementation 'org.xxtea:xxtea-java:1.0.5'
+
+}
+
+sourceCompatibility = "8"
+targetCompatibility = "8"
+
+def getPropertyFromLocalProperties(key) {
+    File file = project.rootProject.file('local.properties')
+    if (file.exists()) {
+        Properties properties = new Properties()
+        properties.load(file.newDataInputStream())
+        return properties.getProperty(key)
+    }
+}
+
+def groupName = 'com.wcg.field.encrypt'
+
+def artifactName = 'encrypt-api'
+
+def pubVersion = '0.0.1'
+
+publish {
+    userOrg = 'wangkunlin1992'
+    groupId = groupName
+    artifactId = artifactName
+    publishVersion = pubVersion
+    uploadName = groupName + ':' + artifactName
+    desc = 'a gradle plugin to handle annotation'
+    website = 'https://github.com/wangkunlin/PassEncode'
+    bintrayUser = getPropertyFromLocalProperties('bintray.user')
+    bintrayKey = getPropertyFromLocalProperties('bintray.apikey')
+    dryRun = false
+}
