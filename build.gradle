@@ -2,9 +2,6 @@
 
 buildscript {
     repositories {
-        maven {
-            url uri("./repo")
-        }
         google()
         jcenter()
     }
@@ -19,6 +16,9 @@ buildscript {
 
 allprojects {
     repositories {
+        maven {
+            url uri("../repo")
+        }
         maven {
             url uri('https://dl.bintray.com/wangkunlin1992/maven/')
         }

@@ -12,6 +12,10 @@ import javax.lang.model.util.Elements;
  */
 class Utils {
 
+    static boolean textEmpty(String txt) {
+        return txt == null || txt.trim().isEmpty();
+    }
+
     static boolean isValidClass(Element element) {
         return element.getKind() == ElementKind.CLASS;
     }

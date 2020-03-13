@@ -7,8 +7,8 @@ import com.spoon.pass.encrypt.EncryptField;
  * Created by wangkunlin
  * On 2020-02-21
  */
-@Encrypt(randomPsw = true)
-class UrlConstant {
+@Encrypt(randomPsw = false, password = "testpsw")
+class UrlConstant2 {
 
     @EncryptField(src = "https://www.google.com", noDecrypt = true)
     String CONFIG_URL = "";

@@ -8,11 +8,11 @@ import org.xxtea.XXTEA;
  */
 public class EncryptDecrypt {
 
-    public static String encode(String data, String key) {
+    public static String encrypt(String data, String key) {
         return XXTEA.encryptToBase64String(data, key);
     }
 
-    public static String decode(String data, String key) {
+    public static String decrypt(String data, String key) {
         return XXTEA.decryptBase64StringToString(data, key);
     }
 }

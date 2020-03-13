@@ -1,12 +1,14 @@
 apply plugin: 'java-library'
 apply plugin: 'com.novoda.bintray-release'
+//apply plugin: 'maven'
+//apply plugin: 'maven-publish'
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
     implementation 'com.squareup:javapoet:1.12.1'
 
-    implementation 'com.wcg.field.encrypt:encrypt-api:0.0.1'
+    implementation 'com.wcg.field.encrypt:encrypt-api:0.0.4'
 
     compileOnly files(org.gradle.internal.jvm.Jvm.current().getToolsJar())
 
@@ -28,7 +30,18 @@ def groupName = 'com.wcg.field.encrypt'
 
 def artifactName = 'encrypt-processor'
 
-def pubVersion = '0.0.2'
+def pubVersion = '0.0.4'
+//
+//group = groupName
+//version = pubVersion
+//
+//uploadArchives {
+//    repositories {
+//        mavenDeployer {
+//            repository(url: uri("../repo"))
+//        }
+//    }
+//}
 
 publish {
     userOrg = 'wangkunlin1992'

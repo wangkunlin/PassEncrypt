@@ -13,6 +13,19 @@ import java.lang.annotation.Target;
 @Target(ElementType.FIELD)
 public @interface EncryptField {
 
-    String value();
+    /**
+     * 需要加密的字符串
+     */
+    String src();
+
+    /**
+     * 是否是 不解密
+     */
+    boolean noDecrypt() default false;
+
+    /**
+     * 单独指定密码，如果为空则使用 顶级密码
+     */
+    String password() default "";
 
 }

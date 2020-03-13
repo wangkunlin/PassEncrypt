@@ -24,7 +24,7 @@ def groupName = 'com.wcg.field.encrypt'
 
 def artifactName = 'encrypt-api'
 
-def pubVersion = '0.0.1'
+def pubVersion = '0.0.4'
 
 publish {
     userOrg = 'wangkunlin1992'
