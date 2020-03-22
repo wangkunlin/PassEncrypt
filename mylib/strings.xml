@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="mylib_to_enc">enc value</string>
+
+    <!-- comment -->
+    <string name="mylib_to_enc2" keep="true">enc value3</string>
+
+</resources>

@@ -13,6 +13,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         TextView tv =findViewById(R.id.txt);
-        tv.setText(UrlConstantEncrypted.new_url);
+        tv.setText(AppStringGetter.getString(this, R.string.to_enc));
     }
 }

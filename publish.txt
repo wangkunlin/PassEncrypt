@@ -1,2 +1,3 @@
 ./gradlew clean :encrypt-api:bintrayUpload
 ./gradlew clean :encrypt-processor:bintrayUpload
+./gradlew clean :string-encrypt:bintrayUpload

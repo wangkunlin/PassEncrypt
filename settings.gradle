@@ -1,2 +1,1 @@
-include ':app', ':encrypt-api', ':encrypt-processor'
-rootProject.name='PassEncode'
+include ':app', ':encrypt-api', ':encrypt-processor', ':string-encrypt', ':mylib'
