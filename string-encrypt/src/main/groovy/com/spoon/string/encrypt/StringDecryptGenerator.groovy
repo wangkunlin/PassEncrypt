@@ -36,7 +36,7 @@ class StringDecryptGenerator {
 
     void generate() {
 
-        String typeName = mModuleName + "StringGetter"
+        String typeName = "Wcg" + mModuleName + "StringGetter"
         File buildConfigJava = new File(getFolderPath(), typeName + ".java")
 
         Closer closer = Closer.create()

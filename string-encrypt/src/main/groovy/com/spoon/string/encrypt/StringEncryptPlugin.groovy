@@ -9,6 +9,7 @@ import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.Task
 import org.jetbrains.annotations.NotNull
+
 /**
  * Created by wangkunlin
  * On 2020-03-21
@@ -36,8 +37,9 @@ class StringEncryptPlugin implements Plugin<Project> {
                 String name = variant.name
                 name = name.substring(0, 1).toUpperCase() + name.substring(1)
                 String moduleName = project.name
+                moduleName = moduleName.replace("-", "_")
 
-                String resId = moduleName.toLowerCase() + "_spoon_psw"
+                String resId = "spoon_psw_" + moduleName.toLowerCase()
 
                 // generateDebugBuildConfig
                 GenerateBuildConfig buildConfigTask = project.tasks.getByName("generate" + name + "BuildConfig")

@@ -13,6 +13,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         TextView tv =findViewById(R.id.txt);
-        tv.setText(AppStringGetter.getString(this, R.string.to_enc));
+        tv.setText(WcgAppStringGetter.getString(this, R.string.to_enc));
     }
 }
