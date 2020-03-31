@@ -67,6 +67,11 @@ class StringValueGenerator {
         for (int i = 0; i < childNodes.length; ++i) {
             Node child = childNodes.item(i)
             if (child instanceof Element) {
+                String tagName = child.getTagName()
+                if (tagName == null || tagName.isEmpty() || tagName != "string") {
+                    // 过滤掉 非 string 标签的元素, string-array 暂不支持
+                    continue
+                }
                 Attr nameAttr = (Attr) child.getAttributes().getNamedItem("name")
                 String name = nameAttr.value
                 String value = child.getFirstChild().textContent
