@@ -14,22 +14,21 @@ class StringDecryptGenerator {
     private static final Set<Modifier> PUBLIC_STATIC = EnumSet.of(Modifier.PUBLIC, Modifier.STATIC)
     private static final Set<Modifier> PUBLIC = EnumSet.of(Modifier.PUBLIC)
     private static final Set<Modifier> PRIVATE = EnumSet.of(Modifier.PRIVATE)
+    private static final Set<Modifier> PRIVATE_STATIC_FINAL = EnumSet.of(Modifier.PRIVATE,
+            Modifier.STATIC, Modifier.FINAL)
 
     private final File mGenFolder
     private final String mBuildConfigPackageName
     private final String mModuleName
-    private final StringEncryptExtension mExtension
-    private final String mResId
+    private final String mPsw
 
     StringDecryptGenerator(File genFolder, String buildConfigPackageName,
-                           String moduleName, StringEncryptExtension extension,
-                           String resId) {
+                           String moduleName, StringEncryptExtension extension) {
         mGenFolder = checkNotNull(genFolder)
         mBuildConfigPackageName = checkNotNull(buildConfigPackageName)
         String name = checkNotNull(moduleName)
         mModuleName = name.substring(0, 1).toUpperCase() + name.substring(1)
-        mExtension = checkNotNull(extension)
-        mResId = checkNotNull(resId)
+        mPsw = extension.password
     }
 
     private File getFolderPath() {
@@ -60,8 +59,8 @@ class StringDecryptGenerator {
                     .beginType(typeName, "class", PUBLIC_FINAL, "Resources")
 
             writer.emitEmptyLine()
-
             writer.emitField("Resources", "mRes", PRIVATE)
+
             writer.emitEmptyLine()
 
             writer.beginConstructor(PUBLIC, "Resources", "res")
@@ -154,6 +153,10 @@ class StringDecryptGenerator {
 
             writer.emitEmptyLine()
 
+            writer.emitField("String", "key", PRIVATE_STATIC_FINAL, "\"" + mPsw + "\"")
+
+            writer.emitEmptyLine()
+
 
             writer.beginMethod("String", "getString", PUBLIC_STATIC,
                     "Resources", "res", "int", "resId")
@@ -163,7 +166,6 @@ class StringDecryptGenerator {
             writer.endControlFlow()
 
             writer.emitStatement("String string = res.getString(resId)")
-            writer.emitStatement("String key = res.getString(R.string." + mResId + ")")
             writer.beginControlFlow("try")
             writer.emitStatement("return EncryptDecrypt.decrypt(string, key)")
             writer.endControlFlow()
@@ -204,7 +206,6 @@ class StringDecryptGenerator {
             writer.endControlFlow()
 
             writer.emitStatement("CharSequence cs = res.getText(resId)")
-            writer.emitStatement("String key = res.getString(R.string." + mResId + ")")
             writer.beginControlFlow("try")
             writer.emitStatement("return EncryptDecrypt.decrypt(cs.toString(), key)")
             writer.endControlFlow()
@@ -225,7 +226,6 @@ class StringDecryptGenerator {
             writer.endControlFlow()
 
             writer.emitStatement("CharSequence cs = res.getText(resId, def)")
-            writer.emitStatement("String key = res.getString(R.string." + mResId + ")")
             writer.beginControlFlow("try")
             writer.emitStatement("return EncryptDecrypt.decrypt(cs.toString(), key)")
             writer.endControlFlow()
@@ -246,7 +246,6 @@ class StringDecryptGenerator {
             writer.endControlFlow()
 
             writer.emitStatement("CharSequence cs = res.getQuantityText(resId, quantity)")
-            writer.emitStatement("String key = res.getString(R.string." + mResId + ")")
             writer.beginControlFlow("try")
             writer.emitStatement("return EncryptDecrypt.decrypt(cs.toString(), key)")
             writer.endControlFlow()
@@ -267,7 +266,6 @@ class StringDecryptGenerator {
             writer.endControlFlow()
 
             writer.emitStatement("String string = res.getQuantityString(resId, quantity)")
-            writer.emitStatement("String key = res.getString(R.string." + mResId + ")")
             writer.beginControlFlow("try")
             writer.emitStatement("return EncryptDecrypt.decrypt(string, key)")
             writer.endControlFlow()

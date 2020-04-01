@@ -1,5 +1,6 @@
 package com.spoon.string.encrypt
 
+import com.android.builder.compiling.ResValueGenerator
 import com.android.ide.common.xml.XmlPrettyPrinter
 import com.android.utils.XmlUtils
 import com.google.common.base.Charsets
@@ -19,7 +20,7 @@ import static com.google.common.base.Preconditions.checkNotNull
  */
 class StringValueGenerator {
 
-    private static final String RES_VALUE_FILENAME_XML = "encryptedStringValues.xml"
+    private static final String RES_VALUE_FILENAME_XML = ResValueGenerator.RES_VALUE_FILENAME_XML
 
     private final File mGenFolder
     private final File mCurFolder
@@ -112,23 +113,31 @@ class StringValueGenerator {
             return
         }
 
-        File resFile = new File(pkgFolder, RES_VALUE_FILENAME_XML)
-
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance()
         factory.setNamespaceAware(true)
         factory.setValidating(false)
         factory.setIgnoringComments(true)
-        DocumentBuilder builder
+        DocumentBuilder builder = factory.newDocumentBuilder()
 
-        builder = factory.newDocumentBuilder()
-        Document document = builder.newDocument()
+        File resFile = new File(pkgFolder, RES_VALUE_FILENAME_XML)
 
-        Node rootNode = document.createElement("resources")
-        document.appendChild(rootNode)
+        Document document
+        Node rootNode
 
-        rootNode.appendChild(document.createTextNode("\n"))
-        rootNode.appendChild(document.createComment("Automatically generated file. DO NOT MODIFY"))
-        rootNode.appendChild(document.createTextNode("\n\n"))
+        if (resFile.exists()) {
+            document = builder.parse(resFile)
+            rootNode = document.getElementsByTagName("resources").item(0)
+        } else {
+            document = builder.newDocument()
+
+            rootNode = document.createElement("resources")
+            document.appendChild(rootNode)
+
+            rootNode.appendChild(document.createTextNode("\n"))
+            rootNode.appendChild(document.createComment("Automatically generated file. DO NOT MODIFY"))
+            rootNode.appendChild(document.createTextNode("\n\n"))
+        }
+
 
         for (ResString field : items) {
 

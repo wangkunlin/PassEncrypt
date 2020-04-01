@@ -1,14 +1,14 @@
 apply plugin: 'groovy'
 apply plugin: 'com.novoda.bintray-release'
-//apply plugin: 'maven'
-//apply plugin: 'maven-publish'
+apply plugin: 'maven'
+apply plugin: 'maven-publish'
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'com.wcg.field.encrypt:encrypt-api:0.0.4'
     implementation gradleApi()
     implementation localGroovy()
-    compileOnly 'com.android.tools.build:gradle:3.5.0'
+    compileOnly 'com.android.tools.build:gradle:3.6.1'
 }
 
 def getPropertyFromLocalProperties(key) {
@@ -24,7 +24,7 @@ def groupName = 'com.wcg.field.encrypt'
 
 def artifactName = 'string-encrypt'
 
-def pubVersion = '0.0.7'
+def pubVersion = '0.0.10'
 
 //group = groupName
 //version = pubVersion

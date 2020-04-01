@@ -23,6 +23,10 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
+
+        debug {
+            resValue('string', 'res_value_test', 'test_res_value')
+        }
     }
 
     compileOptions {

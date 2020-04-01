@@ -16,6 +16,10 @@ class ResString {
         return resString
     }
 
+    static ResString string(String name, String value) {
+        return string(name, value, false)
+    }
+
     static ResString string(String name, String value, boolean keep) {
         ResString resString = new ResString()
         resString.value = value
