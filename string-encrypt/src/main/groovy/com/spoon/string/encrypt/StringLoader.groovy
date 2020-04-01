@@ -55,6 +55,7 @@ class StringLoader {
                 Attr nameAttr = (Attr) child.getAttributes().getNamedItem("name")
                 String name = nameAttr.value
                 String value = child.getFirstChild().textContent
+                value = value.replace("\\n", "\n")
 
                 Attr keepAttr = (Attr) child.getAttributes().getNamedItem("keep")
                 boolean keep = false

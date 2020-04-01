@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="to_enc">enc value</string>
+    <string name="to_enc">enc \n value</string>
 
     <!-- comment -->
     <string name="to_enc2" keep="true">enc value3</string>
