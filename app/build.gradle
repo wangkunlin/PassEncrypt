@@ -1,5 +1,10 @@
 apply plugin: 'com.android.application'
 apply plugin: 'com.wcg.string-encrypt'
+apply plugin: 'com.wcg.rename-package'
+
+renamePackage {
+    applicationId 'com.renamed.test.pkg'
+}
 
 stringEncrypt {
     inputFile 'strings.xml'
