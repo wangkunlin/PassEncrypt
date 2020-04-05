@@ -43,7 +43,7 @@ publish {
     publishVersion = pubVersion
     uploadName = groupName + ':' + artifactName
     desc = 'a gradle plugin to rename android package name, only works on debuggable = false'
-    website = 'https://github.com/wangkunlin/PassEncrypt.git'
+    website = 'https://github.com/wangkunlin/PassEncrypt'
     bintrayUser = getPropertyFromLocalProperties('bintray.user')
     bintrayKey = getPropertyFromLocalProperties('bintray.apikey')
     dryRun = false
