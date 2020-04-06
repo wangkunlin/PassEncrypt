@@ -146,6 +146,7 @@ class StringDecryptGenerator {
             writer.emitJavadoc("Automatically generated file. DO NOT MODIFY")
                     .emitPackage(mBuildConfigPackageName)
                     .emitImports("android.content.res.Resources",
+                            "android.text.TextUtils",
                             mBuildConfigPackageName + ".R",
                             "com.spoon.pass.encrypt.EncryptDecrypt")
                     .emitEmptyLine()
@@ -167,7 +168,13 @@ class StringDecryptGenerator {
 
             writer.emitStatement("String string = res.getString(resId)")
             writer.beginControlFlow("try")
-            writer.emitStatement("return EncryptDecrypt.decrypt(string, key)")
+
+            writer.emitStatement("String dec = EncryptDecrypt.decrypt(string, key)")
+            writer.beginControlFlow("if (TextUtils.isEmpty(dec))")
+            writer.emitStatement("return string")
+            writer.endControlFlow()
+            writer.emitStatement("return dec")
+
             writer.endControlFlow()
             writer.beginControlFlow("catch(Throwable e)")
 //            writer.emitStatement("e.printStackTrace()")
@@ -207,7 +214,13 @@ class StringDecryptGenerator {
 
             writer.emitStatement("CharSequence cs = res.getText(resId)")
             writer.beginControlFlow("try")
-            writer.emitStatement("return EncryptDecrypt.decrypt(cs.toString(), key)")
+
+            writer.emitStatement("String dec = EncryptDecrypt.decrypt(cs.toString(), key)")
+            writer.beginControlFlow("if (TextUtils.isEmpty(dec))")
+            writer.emitStatement("return cs")
+            writer.endControlFlow()
+            writer.emitStatement("return dec")
+
             writer.endControlFlow()
             writer.beginControlFlow("catch(Throwable e)")
 //            writer.emitStatement("e.printStackTrace()")
@@ -227,7 +240,13 @@ class StringDecryptGenerator {
 
             writer.emitStatement("CharSequence cs = res.getText(resId, def)")
             writer.beginControlFlow("try")
-            writer.emitStatement("return EncryptDecrypt.decrypt(cs.toString(), key)")
+
+            writer.emitStatement("String dec = EncryptDecrypt.decrypt(cs.toString(), key)")
+            writer.beginControlFlow("if (TextUtils.isEmpty(dec))")
+            writer.emitStatement("return cs")
+            writer.endControlFlow()
+            writer.emitStatement("return dec")
+
             writer.endControlFlow()
             writer.beginControlFlow("catch(Throwable e)")
 //            writer.emitStatement("e.printStackTrace()")
@@ -247,7 +266,13 @@ class StringDecryptGenerator {
 
             writer.emitStatement("CharSequence cs = res.getQuantityText(resId, quantity)")
             writer.beginControlFlow("try")
-            writer.emitStatement("return EncryptDecrypt.decrypt(cs.toString(), key)")
+
+            writer.emitStatement("String dec = EncryptDecrypt.decrypt(cs.toString(), key)")
+            writer.beginControlFlow("if (TextUtils.isEmpty(dec))")
+            writer.emitStatement("return cs")
+            writer.endControlFlow()
+            writer.emitStatement("return dec")
+
             writer.endControlFlow()
             writer.beginControlFlow("catch(Throwable e)")
 //            writer.emitStatement("e.printStackTrace()")
@@ -267,7 +292,13 @@ class StringDecryptGenerator {
 
             writer.emitStatement("String string = res.getQuantityString(resId, quantity)")
             writer.beginControlFlow("try")
-            writer.emitStatement("return EncryptDecrypt.decrypt(string, key)")
+
+            writer.emitStatement("String dec = EncryptDecrypt.decrypt(string, key)")
+            writer.beginControlFlow("if (TextUtils.isEmpty(dec))")
+            writer.emitStatement("return string")
+            writer.endControlFlow()
+            writer.emitStatement("return dec")
+
             writer.endControlFlow()
             writer.beginControlFlow("catch(Throwable e)")
 //            writer.emitStatement("e.printStackTrace()")
