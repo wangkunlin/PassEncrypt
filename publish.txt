@@ -2,3 +2,5 @@
 ./gradlew clean :encrypt-processor:bintrayUpload
 ./gradlew clean :string-encrypt:bintrayUpload
 ./gradlew clean :rename-package:bintrayUpload
+./gradlew clean :text-decrypt:bintrayUpload
+./gradlew clean :text-decrypt-support:bintrayUpload

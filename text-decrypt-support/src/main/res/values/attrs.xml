@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="TextDecryptHelper">
+        <!--  text view -->
+        <attr name="android:text" />
+        <attr name="android:hint" />
+
+        <!-- auto complete text view -->
+        <attr name="android:completionHint" />
+
+        <!-- toggle button -->
+        <attr name="android:textOn" />
+        <attr name="android:textOff" />
+
+    </declare-styleable>
+
+</resources>

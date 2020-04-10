@@ -48,4 +48,6 @@ dependencies {
 
     implementation 'com.wcg.field.encrypt:encrypt-api:0.0.4'
     annotationProcessor 'com.wcg.field.encrypt:encrypt-processor:0.0.4'
+
+    implementation 'com.wcg.field.encrypt:text-decrypt:0.0.1'
 }
