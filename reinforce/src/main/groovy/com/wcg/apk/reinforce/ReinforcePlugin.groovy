@@ -26,10 +26,10 @@ class ReinforcePlugin implements Plugin<Project> {
             }
             def variants = project.android.applicationVariants
             variants.all { variant ->
-                boolean debuggable = variant.buildType.debuggable
-                if (debuggable) {
+//                boolean debuggable = variant.buildType.debuggable
+//                if (!debuggable) {
                     installReinforce(project, variant)
-                }
+//                }
             }
         }
     }
