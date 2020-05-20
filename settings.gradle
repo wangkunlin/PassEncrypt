@@ -2,3 +2,4 @@ include ':app', ':encrypt-api', ':encrypt-processor', ':string-encrypt', ':mylib
 include ':rename-package'
 include ':text-decrypt'
 include ':text-decrypt-support'
+include ':reinforce'

@@ -1,0 +1,58 @@
+package com.wcg.apk.reinforce
+
+import com.android.build.gradle.AppPlugin
+import org.gradle.api.Plugin
+import org.gradle.api.Project
+import org.gradle.api.Task
+
+class ReinforcePlugin implements Plugin<Project> {
+
+    @Override
+    void apply(Project project) {
+
+        def hasAppPlugin = project.plugins.hasPlugin AppPlugin
+
+        if (!hasAppPlugin) {
+            throw new IllegalStateException("The 'android' plugin is required.")
+        }
+
+        ReinforceExtension extension = project.extensions.create("reinforce", ReinforceExtension)
+        project.afterEvaluate {
+            if (extension.sid == null || extension.sid.isEmpty()) {
+                throw new IllegalStateException("sid is null.")
+            }
+            if (extension.skey == null || extension.skey.isEmpty()) {
+                throw new IllegalStateException("skey is null.")
+            }
+            def variants = project.android.applicationVariants
+            variants.all { variant ->
+                boolean debuggable = variant.buildType.debuggable
+                if (debuggable) {
+                    installReinforce(project, variant)
+                }
+            }
+        }
+    }
+
+    private static void installReinforce(Project project, def variant) {
+        String assembleTaskName = "assemble${variant.name.capitalize()}"
+//        String packageTaskName = "package${variant.name.capitalize()}"
+        Task assembleTask = project.tasks.getByName(assembleTaskName)
+//        Task packageTask = project.tasks.getByName(packageTaskName)
+
+        String reinforceTaskName = "reinforce${variant.name.capitalize()}"
+
+        ReinforceTask reinforceTask
+        if (project.tasks.findByName(reinforceTaskName) == null) {
+            reinforceTask = project.tasks.create(reinforceTaskName, ReinforceTask)
+        } else {
+            reinforceTask = project.tasks.getByName(reinforceTaskName)
+        }
+
+        reinforceTask.setVariant(variant)
+
+//        assembleTask.dependsOn(reinforceTask)
+        reinforceTask.dependsOn(assembleTask)
+
+    }
+}

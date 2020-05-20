@@ -27,7 +27,7 @@ class StringDecryptGenerator {
         mGenFolder = checkNotNull(genFolder)
         mBuildConfigPackageName = checkNotNull(buildConfigPackageName)
         String name = checkNotNull(moduleName)
-        mModuleName = name.substring(0, 1).toUpperCase() + name.substring(1)
+        mModuleName = name.capitalize()
         mPsw = extension.password
     }
 

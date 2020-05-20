@@ -1,0 +1,63 @@
+apply plugin: 'groovy'
+apply plugin: 'com.novoda.bintray-release'
+apply plugin: 'maven'
+apply plugin: 'maven-publish'
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation gradleApi()
+    implementation localGroovy()
+
+    compileOnly 'com.android.tools.build:gradle:3.6.1'
+
+}
+
+jar {
+    // Will include every single one of your dependencies, project or not
+    from {
+        configurations.runtimeClasspath.collect {
+            if (it.name == "ms-shield.jar")  {
+                return zipTree(it)
+            }
+        }
+    }
+}
+
+def getPropertyFromLocalProperties(key) {
+    File file = project.rootProject.file('local.properties')
+    if (file.exists()) {
+        Properties properties = new Properties()
+        properties.load(file.newDataInputStream())
+        return properties.getProperty(key)
+    }
+}
+
+def groupName = 'com.wcg.apk.reinforce'
+
+def artifactName = 'reinforce'
+
+def pubVersion = '0.0.2'
+
+//group = groupName
+//version = pubVersion
+//
+//uploadArchives {
+//    repositories {
+//        mavenDeployer {
+//            repository(url: uri("../repo"))
+//        }
+//    }
+//}
+
+publish {
+    userOrg = 'wangkunlin1992'
+    groupId = groupName
+    artifactId = artifactName
+    publishVersion = pubVersion
+    uploadName = groupName + ':' + artifactName
+    desc = 'a gradle plugin to handle apk reinforce'
+    website = 'https://github.com/wangkunlin/PassEncrypt'
+    bintrayUser = getPropertyFromLocalProperties('bintray.user')
+    bintrayKey = getPropertyFromLocalProperties('bintray.apikey')
+    dryRun = false
+}

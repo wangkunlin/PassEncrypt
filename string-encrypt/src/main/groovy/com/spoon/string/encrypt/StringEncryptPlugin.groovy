@@ -39,7 +39,7 @@ class StringEncryptPlugin implements Plugin<Project> {
             def variants = hasAppPlugin ? project.android.applicationVariants : project.android.libraryVariants
             variants.all { variant ->
                 String name = variant.name
-                name = name.substring(0, 1).toUpperCase() + name.substring(1)
+                name = name.capitalize()
                 String moduleName = project.name
                 moduleName = moduleName.replace("-", "_")
 

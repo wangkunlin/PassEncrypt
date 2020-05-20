@@ -1,6 +1,21 @@
 apply plugin: 'com.android.application'
 apply plugin: 'com.wcg.string-encrypt'
 apply plugin: 'com.wcg.rename-package'
+apply plugin: 'com.wcg.apk-reinforce'
+
+def getPropertyFromLocalProperties(key) {
+    File file = project.rootProject.file('local.properties')
+    if (file.exists()) {
+        Properties properties = new Properties()
+        properties.load(file.newDataInputStream())
+        return properties.getProperty(key)
+    }
+}
+
+reinforce {
+    sid getPropertyFromLocalProperties("tencent.sid")
+    skey getPropertyFromLocalProperties("tencent.skey")
+}
 
 renamePackage {
     applicationId 'com.renamed.test.pkg'
