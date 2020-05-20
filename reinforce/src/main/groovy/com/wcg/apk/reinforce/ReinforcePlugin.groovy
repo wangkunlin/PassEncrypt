@@ -4,6 +4,7 @@ import com.android.build.gradle.AppPlugin
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.Task
+import org.gradle.api.tasks.TaskProvider
 
 class ReinforcePlugin implements Plugin<Project> {
 
@@ -28,7 +29,7 @@ class ReinforcePlugin implements Plugin<Project> {
             variants.all { variant ->
 //                boolean debuggable = variant.buildType.debuggable
 //                if (!debuggable) {
-                    installReinforce(project, variant)
+                installReinforce(project, variant)
 //                }
             }
         }
@@ -36,22 +37,25 @@ class ReinforcePlugin implements Plugin<Project> {
 
     private static void installReinforce(Project project, def variant) {
         String assembleTaskName = "assemble${variant.name.capitalize()}"
-//        String packageTaskName = "package${variant.name.capitalize()}"
         Task assembleTask = project.tasks.getByName(assembleTaskName)
-//        Task packageTask = project.tasks.getByName(packageTaskName)
 
         String reinforceTaskName = "reinforce${variant.name.capitalize()}"
 
-        ReinforceTask reinforceTask
-        if (project.tasks.findByName(reinforceTaskName) == null) {
-            reinforceTask = project.tasks.create(reinforceTaskName, ReinforceTask)
-        } else {
-            reinforceTask = project.tasks.getByName(reinforceTaskName)
+        ReinforceTask reinforceTask = project.tasks.create(reinforceTaskName, ReinforceTask) {
+            group = "reinforce"
+            description = "reinforce apk task"
         }
 
+        def scope = variant.variantData.scope
+        File apkDir = scope.apkLocation
+        String apkName = variant.variantData.outputScope.mainSplit.outputFileName
+        File apkFile = new File(apkDir, apkName)
+        File reinforceDir = new File(apkDir, "reinforce")
+
+        reinforceTask.reinforceDir = reinforceDir
+        reinforceTask.apkFile = apkFile
         reinforceTask.setVariant(variant)
 
-//        assembleTask.dependsOn(reinforceTask)
         reinforceTask.dependsOn(assembleTask)
 
     }

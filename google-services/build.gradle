@@ -8,19 +8,9 @@ dependencies {
     implementation gradleApi()
     implementation localGroovy()
 
+    implementation 'com.google.code.gson:gson:2.8.5'
     compileOnly 'com.android.tools.build:gradle:3.6.1'
 
-}
-
-jar {
-    // Will include every single one of your dependencies, project or not
-    from {
-        configurations.runtimeClasspath.collect {
-            if (it.name == "ms-shield.jar")  {
-                return zipTree(it)
-            }
-        }
-    }
 }
 
 def getPropertyFromLocalProperties(key) {
@@ -32,15 +22,15 @@ def getPropertyFromLocalProperties(key) {
     }
 }
 
-def groupName = 'com.wcg.apk.reinforce'
+def groupName = 'com.wcg.google.services'
 
-def artifactName = 'reinforce'
+def artifactName = 'google-services'
 
-def pubVersion = '0.0.4'
+def pubVersion = '0.0.1'
 
-group = groupName
-version = pubVersion
-
+//group = groupName
+//version = pubVersion
+//
 //uploadArchives {
 //    repositories {
 //        mavenDeployer {
@@ -55,7 +45,7 @@ publish {
     artifactId = artifactName
     publishVersion = pubVersion
     uploadName = groupName + ':' + artifactName
-    desc = 'a gradle plugin to handle apk reinforce'
+    desc = 'a gradle plugin to handle google-service.json'
     website = 'https://github.com/wangkunlin/PassEncrypt'
     bintrayUser = getPropertyFromLocalProperties('bintray.user')
     bintrayKey = getPropertyFromLocalProperties('bintray.apikey')

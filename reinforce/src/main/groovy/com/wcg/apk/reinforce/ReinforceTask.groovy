@@ -2,13 +2,22 @@ package com.wcg.apk.reinforce
 
 import com.android.builder.model.SigningConfig
 import org.gradle.api.DefaultTask
+import org.gradle.api.GradleException
+import org.gradle.api.tasks.InputFile
+import org.gradle.api.tasks.OutputDirectory
 import org.gradle.api.tasks.TaskAction
 import tencent.reinforce.lib.Reinforce
 import util.CommonUtil
 
 class ReinforceTask extends DefaultTask {
 
-    private def variant;
+    private def variant
+
+    @InputFile
+    public File apkFile
+
+    @OutputDirectory
+    public File reinforceDir
 
     void setVariant(def variant) {
         this.variant = variant
@@ -18,20 +27,18 @@ class ReinforceTask extends DefaultTask {
     void execute() {
 
         if (!variant.isSigningReady()) {
-            throw new IllegalStateException("${variant.name} sign not config")
+            throw new GradleException("${variant.name} sign not config")
         }
 
         ReinforceExtension extension = project.extensions.getByType(ReinforceExtension)
 
         SigningConfig signingConfig = variant.signingConfig
 
-        def scope = variant.variantData.scope
-        File apkDir = scope.apkLocation
-        String apkName = variant.variantData.outputScope.mainSplit.outputFileName
-        File apkFile = new File(apkDir, apkName)
-        System.out.println(apkFile.toString())
-        File reinforceDir = new File(apkDir, "reinforce")
+        project.logger.warn("To reinforce apk : ${apkFile.toString()}")
+
+        deleteFile(reinforceDir)
         reinforceDir.mkdirs()
+
         def reinforce = new Reinforce.Builder()
                 .setDownloadPath(reinforceDir.getAbsolutePath())
                 .setSid(extension.sid)
@@ -46,7 +53,7 @@ class ReinforceTask extends DefaultTask {
         String sdkDir = project.android.sdkDirectory.absolutePath
         String buildToolsVersion = project.android.buildToolsVersion
         String buildToolsDir = "${sdkDir}${File.separator}build-tools${File.separator}${buildToolsVersion}"
-        System.out.println("buildToolsDir: ${buildToolsDir}")
+        project.logger.warn("buildToolsDir: ${buildToolsDir}")
 
         String zipalignName = isWindows() ? "zipalign.exe" : "zipalign"
         String spksignerName = isWindows() ? "apksigner.bat" : "apksigner"
@@ -54,56 +61,72 @@ class ReinforceTask extends DefaultTask {
         String zipalign = "${buildToolsDir}${File.separator}${zipalignName}"
         String apksigner = "${buildToolsDir}${File.separator}${spksignerName}"
 
-        String aligned = new File(reinforceDir, "${reinforceApkName}-aligned.apk")
-        String alignedSigned = new File(reinforceDir, "${reinforceApkName}-aligned-signed.apk")
+        String alignedApk = new File(reinforceDir, "${reinforceApkName}-aligned.apk")
+        String alignedSignedApk = new File(reinforceDir, "${reinforceApkName}-aligned-signed.apk")
 
-        String alignCmd = "${zipalign} 4 ${reinforceApk} ${aligned}"
-        System.out.println("zipalign cmd: ${alignCmd}")
+        String alignCmd = "${zipalign} 4 ${reinforceApk} ${alignedApk}"
+        project.logger.warn("start align apk")
+        project.logger.warn("zipalign cmd: ${alignCmd}")
 
         def runtime = Runtime.getRuntime()
-        System.out.println("start align apk")
         Process pro = runtime.exec(alignCmd)
         int status = pro.waitFor()
         BufferedReader br = new BufferedReader(new InputStreamReader(pro.getInputStream()))
 
         String line
         while ((line = br.readLine()) != null) {
-            System.out.println(line)
+            project.logger.warn(line)
         }
         br.close()
 
         if (status != 0) {
-            System.out.println("Failed to align apk")
-            return
+            throw new GradleException("Failed to align apk")
         }
+        project.logger.warn("aligend apk : ${alignedApk}")
 
         String signCmd = "${apksigner} sign -v --ks ${signingConfig.storeFile.absolutePath} " +
                 "--ks-key-alias ${signingConfig.keyAlias} " +
                 "--ks-pass pass:${signingConfig.storePassword} " +
                 "--key-pass pass:${signingConfig.keyPassword} " +
-                "--out ${alignedSigned} ${aligned}"
-        System.out.println("sign apk cmd: ${signCmd}")
+                "--out ${alignedSignedApk} ${alignedApk}"
+        project.logger.warn("start sign apk")
+        project.logger.warn("sign apk cmd: ${signCmd}")
 
-        System.out.println("start sign apk")
         pro = runtime.exec(signCmd)
         status = pro.waitFor()
 
         br = new BufferedReader(new InputStreamReader(pro.getInputStream()))
 
         while ((line = br.readLine()) != null) {
-            System.out.println(line)
+            project.logger.warn(line)
         }
 
         br.close()
 
         if (status != 0) {
-            System.out.println("Failed to sign apk")
-        } else {
-            System.out.println("Reinforce apk done.")
+            throw new GradleException("Failed to sign apk")
         }
+
+        project.logger.warn("Aligend and Signed apk : ${alignedSignedApk}")
+
+        project.logger.warn("Reinforce apk done.")
     }
 
     private static boolean isWindows() {
         return System.getProperty("os.name").toLowerCase().contains("windows")
+    }
+
+    private static void deleteFile(File file) {
+        if (!file.exists()) {
+            return
+        }
+        if (file.isDirectory()) {
+            def files = file.listFiles()
+            for (def f : files) {
+                deleteFile(f)
+            }
+        } else {
+            file.delete()
+        }
     }
 }

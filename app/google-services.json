@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "577321312243",
+    "firebase_url": "https://xxx-ccc.firebaseio.com",
+    "project_id": "xxx-ccc",
+    "storage_bucket": "xxx-ccc.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:577321312243:android:65d2f7e34df7a17f",
+        "android_client_info": {
+          "package_name": "com.renamed.test.pkg"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "577321312243-i6lml3azq246bgsf4qjs5raor4s1lsvp0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzsayDOAH22eriwTsmYG4h8a11DUz8olsq1fHU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "577321312243-i6lml3azq246bgsf4qjs5raor4s1lsvp0.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

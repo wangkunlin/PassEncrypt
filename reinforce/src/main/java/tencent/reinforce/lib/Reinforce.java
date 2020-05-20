@@ -67,7 +67,7 @@ public class Reinforce {
     }
 
     public void start() {
-        System.out.println("开始上传apk");
+        System.out.println("uploading apk");
 
         originalApkPath = param.getUploadPath();
         File apk = new File(originalApkPath);
@@ -97,7 +97,7 @@ public class Reinforce {
                 String string = response.body().string();
                 Code code = new Gson().fromJson(string, Code.class);
                 if (code.getCode() == 0) {
-                    System.out.println("上传成功");
+                    System.out.println("upload success");
                     param.setPkg_name(code.getData().getAppInfo().getAppPkgName());
                     param.setUploadPath(code.getData().getAppInfo().getAppUrl());
                     param.setMd5(code.getData().getAppInfo().getAppMd5());
@@ -140,7 +140,7 @@ public class Reinforce {
 
 
     private void startShield(Param param) {
-        System.out.println("加固请求");
+        System.out.println("request reinforce");
 
         try {
             Credential credential = new Credential(param.getSid(), param.getSkey());
@@ -164,18 +164,18 @@ public class Reinforce {
                     String md5 = response.getShieldInfo().getShieldMd5();
                     String url = response.getShieldInfo().getAppUrl();
                     if (param.getDownloadType().equals("url")) {
-                        System.out.println("加固包下载链接：");
+                        System.out.println("reinforced apk download url:");
                         System.out.println(url);
-                        success("加固完成", "");
+                        success("reinforce success", "");
                     } else {
-                        System.out.println("加固成功，下载中");
-                        download(md5, url, getDownFilePath(), "加固包下载成功");
+                        System.out.println("reinforce success, downloading");
+                        download(md5, url, getDownFilePath(), "download reinforced apk success");
                     }
                 }
                 break;
             case 2:
                 if (from.equals("create")) {
-                    System.out.println("请求成功");
+                    System.out.println("request success");
                     checkResult(itemId, param);
                 } else if (from.equals("result")) {
                     try {
@@ -190,7 +190,7 @@ public class Reinforce {
             case 3:
                 if (from.equals("result")) {
                     int code = response.getShieldInfo().getShieldCode();
-                    System.out.print("错误码: ");
+                    System.out.print("error code: ");
                     System.out.println(code);
                 } else {
                     CommonUtil.prettyJson(CommonUtil.adapter(ReturnCode.SHIELDERROR));
@@ -219,7 +219,7 @@ public class Reinforce {
                         down.delete();
                     }
 
-                    System.out.println("下载输出路径: ");
+                    System.out.println("download apk path: ");
                     System.out.println(down);
                     BufferedSink sink = Okio.buffer(Okio.sink(down));
                     Buffer sinkBuffer = sink.buffer();
@@ -234,8 +234,8 @@ public class Reinforce {
                     sink.flush();
                     sink.close();
                     source.close();
-                    if (msg.equals("加固包下载成功")) {
-                        System.out.println("加固包MD5: " + md5);
+                    if (msg.equals("download reinforced apk success")) {
+                        System.out.println("reinforced apk MD5: " + md5);
                     }
 
                     if (md5.toLowerCase().equals(CommonUtil.getFileMd5(down))) {
@@ -259,14 +259,14 @@ public class Reinforce {
 
     private void success(String msg, String fileName) {
         System.out.println(msg);
-        if (msg.equals("更新成功")) {
+        if (msg.equals("update success")) {
             File file = new File(fileName);
             if (file.exists()) {
                 file.renameTo(new File("ms-shield.jar"));
             }
         } else {
-            System.out.println("加固包需要重签名");
-            System.out.println("加固并签名的包请务必测试是否正常运行");
+            System.out.println("reinforced apk need resign");
+            System.out.println("reinforce and resigned apk must be test");
         }
     }
 
@@ -286,7 +286,7 @@ public class Reinforce {
     }
 
     private void checkResult(String requestId, Param param) {
-        System.out.println("加固中.......");
+        System.out.println("reinforcing apk.......");
         Credential credential = new Credential(param.getSid(), param.getSkey());
         MsClient client = new MsClient(credential, "");
         DescribeShieldResultRequest resultRequest = new DescribeShieldResultRequest();
@@ -324,14 +324,14 @@ public class Reinforce {
                     pkg_name = info.getBindInfo().getAppPkgName();
                     if (pid == 12750 && pkg_name.equals(param.getPkg_name())) {
                         serviceInfo.setServiceEdition("enterprise");
-                        System.out.println("企业版加固");
+                        System.out.println("Enterprise Level Reinforce");
                         flag = true;
                         break;
                     }
 
                     if (pid == 13624 && pkg_name.equals(param.getPkg_name())) {
                         serviceInfo.setServiceEdition("professional");
-                        System.out.println("专业版加固");
+                        System.out.println("Professional Level Reinforce");
                         flag = true;
                         break;
                     }
@@ -341,11 +341,11 @@ public class Reinforce {
                     getShieldPlan();
                 } else {
                     serviceInfo.setServiceEdition("basic");
-                    System.out.println("基础版加固");
+                    System.out.println("Basic Level Reinforce");
                 }
             } else {
                 serviceInfo.setServiceEdition("basic");
-                System.out.println("基础版加固");
+                System.out.println("Basic Level Reinforce");
             }
         } catch (TencentCloudSDKException var13) {
             handleError(var13.getMessage());

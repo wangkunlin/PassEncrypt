@@ -2,6 +2,7 @@ apply plugin: 'com.android.application'
 apply plugin: 'com.wcg.string-encrypt'
 apply plugin: 'com.wcg.rename-package'
 apply plugin: 'com.wcg.apk-reinforce'
+apply plugin: 'com.wcg.google-services'
 
 def getPropertyFromLocalProperties(key) {
     File file = project.rootProject.file('local.properties')
