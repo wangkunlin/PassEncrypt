@@ -44,7 +44,10 @@ class ReinforceTask extends DefaultTask {
                 .setSid(extension.sid)
                 .setSkey(extension.skey)
                 .setUploadPath(apkFile.getAbsolutePath()).build()
-        reinforce.start()
+        int result = reinforce.start()
+        if (result != 0) {
+            throw new GradleException("")
+        }
 
         String reinforceApk = reinforce.getDownFilePath()
 
