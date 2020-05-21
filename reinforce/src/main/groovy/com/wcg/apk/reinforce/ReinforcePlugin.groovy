@@ -4,7 +4,6 @@ import com.android.build.gradle.AppPlugin
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.Task
-import org.gradle.api.tasks.TaskProvider
 
 class ReinforcePlugin implements Plugin<Project> {
 
@@ -36,8 +35,6 @@ class ReinforcePlugin implements Plugin<Project> {
     }
 
     private static void installReinforce(Project project, def variant) {
-        String assembleTaskName = "assemble${variant.name.capitalize()}"
-        Task assembleTask = project.tasks.getByName(assembleTaskName)
 
         String reinforceTaskName = "reinforce${variant.name.capitalize()}"
 
@@ -55,6 +52,9 @@ class ReinforcePlugin implements Plugin<Project> {
         reinforceTask.reinforceDir = reinforceDir
         reinforceTask.apkFile = apkFile
         reinforceTask.setVariant(variant)
+
+        String assembleTaskName = "assemble${variant.name.capitalize()}"
+        Task assembleTask = project.tasks.getByName(assembleTaskName)
 
         reinforceTask.dependsOn(assembleTask)
 

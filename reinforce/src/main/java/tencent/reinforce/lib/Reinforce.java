@@ -26,6 +26,8 @@ import com.tencentcloudapi.ms.v20180408.models.ResourceInfo;
 import com.tencentcloudapi.ms.v20180408.models.ServiceInfo;
 import com.tencentcloudapi.ms.v20180408.models.ShieldPlanInfo;
 
+import org.gradle.api.logging.Logger;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.Iterator;
@@ -62,12 +64,15 @@ public class Reinforce {
     private String itemid = "";
     private DescribeShieldResultResponse response;
 
+    private Logger mLogger;
+
     private Reinforce(Builder builder) {
         param = builder.param;
+        mLogger = builder.logger;
     }
 
     public void start() {
-        System.out.println("uploading apk");
+        mLogger.warn("uploading apk");
 
         originalApkPath = param.getUploadPath();
         File apk = new File(originalApkPath);
@@ -97,7 +102,7 @@ public class Reinforce {
                 String string = response.body().string();
                 Code code = new Gson().fromJson(string, Code.class);
                 if (code.getCode() == 0) {
-                    System.out.println("upload success");
+                    mLogger.warn("upload success");
                     param.setPkg_name(code.getData().getAppInfo().getAppPkgName());
                     param.setUploadPath(code.getData().getAppInfo().getAppUrl());
                     param.setMd5(code.getData().getAppInfo().getAppMd5());
@@ -112,7 +117,7 @@ public class Reinforce {
                     CommonUtil.prettyJson((new Gson()).toJson(new EnumToString(code.getCode(), code.getMsg())));
                 }
             } else {
-                System.out.println("upload failed code: " + response.code());
+                mLogger.warn("upload failed code: " + response.code());
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -140,7 +145,7 @@ public class Reinforce {
 
 
     private void startShield(Param param) {
-        System.out.println("request reinforce");
+        mLogger.warn("request reinforce");
 
         try {
             Credential credential = new Credential(param.getSid(), param.getSkey());
@@ -151,7 +156,7 @@ public class Reinforce {
             CreateShieldInstanceResponse resp = client.CreateShieldInstance(request);
             checkStatus(resp.getProgress(), "create", itemid = resp.getItemId());
         } catch (TencentCloudSDKException var7) {
-            System.out.println(var7.toString());
+            mLogger.warn(var7.toString());
             handleError(var7.getMessage());
         }
 
@@ -164,18 +169,18 @@ public class Reinforce {
                     String md5 = response.getShieldInfo().getShieldMd5();
                     String url = response.getShieldInfo().getAppUrl();
                     if (param.getDownloadType().equals("url")) {
-                        System.out.println("reinforced apk download url:");
-                        System.out.println(url);
+                        mLogger.warn("reinforced apk download url:");
+                        mLogger.warn(url);
                         success("reinforce success", "");
                     } else {
-                        System.out.println("reinforce success, downloading");
+                        mLogger.warn("reinforce success, downloading");
                         download(md5, url, getDownFilePath(), "download reinforced apk success");
                     }
                 }
                 break;
             case 2:
                 if (from.equals("create")) {
-                    System.out.println("request success");
+                    mLogger.warn("request success");
                     checkResult(itemId, param);
                 } else if (from.equals("result")) {
                     try {
@@ -190,8 +195,7 @@ public class Reinforce {
             case 3:
                 if (from.equals("result")) {
                     int code = response.getShieldInfo().getShieldCode();
-                    System.out.print("error code: ");
-                    System.out.println(code);
+                    mLogger.warn("error code: " + code);
                 } else {
                     CommonUtil.prettyJson(CommonUtil.adapter(ReturnCode.SHIELDERROR));
                 }
@@ -219,8 +223,7 @@ public class Reinforce {
                         down.delete();
                     }
 
-                    System.out.println("download apk path: ");
-                    System.out.println(down);
+                    mLogger.warn("download apk path: " + down);
                     BufferedSink sink = Okio.buffer(Okio.sink(down));
                     Buffer sinkBuffer = sink.buffer();
                     long totalBytesRead = 0L;
@@ -235,7 +238,7 @@ public class Reinforce {
                     sink.close();
                     source.close();
                     if (msg.equals("download reinforced apk success")) {
-                        System.out.println("reinforced apk MD5: " + md5);
+                        mLogger.warn("reinforced apk MD5: " + md5);
                     }
 
                     if (md5.toLowerCase().equals(CommonUtil.getFileMd5(down))) {
@@ -258,15 +261,15 @@ public class Reinforce {
     }
 
     private void success(String msg, String fileName) {
-        System.out.println(msg);
+        mLogger.warn(msg);
         if (msg.equals("update success")) {
             File file = new File(fileName);
             if (file.exists()) {
                 file.renameTo(new File("ms-shield.jar"));
             }
         } else {
-            System.out.println("reinforced apk need resign");
-            System.out.println("reinforce and resigned apk must be test");
+            mLogger.warn("reinforced apk need resign");
+            mLogger.warn("reinforce and resigned apk must be test");
         }
     }
 
@@ -277,7 +280,7 @@ public class Reinforce {
         }
 
         if (param.getUploadType().equals("file")) {
-            basename = basename + uploadApkName + "_reinforce.apk";
+            basename = basename + uploadApkName + "-reinforced.apk";
         } else if (param.getUploadType().equals("url")) {
             basename = basename + "my_legu.apk";
         }
@@ -286,7 +289,7 @@ public class Reinforce {
     }
 
     private void checkResult(String requestId, Param param) {
-        System.out.println("reinforcing apk.......");
+        mLogger.warn("reinforcing apk.......");
         Credential credential = new Credential(param.getSid(), param.getSkey());
         MsClient client = new MsClient(credential, "");
         DescribeShieldResultRequest resultRequest = new DescribeShieldResultRequest();
@@ -324,14 +327,14 @@ public class Reinforce {
                     pkg_name = info.getBindInfo().getAppPkgName();
                     if (pid == 12750 && pkg_name.equals(param.getPkg_name())) {
                         serviceInfo.setServiceEdition("enterprise");
-                        System.out.println("Enterprise Level Reinforce");
+                        mLogger.warn("Enterprise Level Reinforce");
                         flag = true;
                         break;
                     }
 
                     if (pid == 13624 && pkg_name.equals(param.getPkg_name())) {
                         serviceInfo.setServiceEdition("professional");
-                        System.out.println("Professional Level Reinforce");
+                        mLogger.warn("Professional Level Reinforce");
                         flag = true;
                         break;
                     }
@@ -341,11 +344,11 @@ public class Reinforce {
                     getShieldPlan();
                 } else {
                     serviceInfo.setServiceEdition("basic");
-                    System.out.println("Basic Level Reinforce");
+                    mLogger.warn("Basic Level Reinforce");
                 }
             } else {
                 serviceInfo.setServiceEdition("basic");
-                System.out.println("Basic Level Reinforce");
+                mLogger.warn("Basic Level Reinforce");
             }
         } catch (TencentCloudSDKException var13) {
             handleError(var13.getMessage());
@@ -381,13 +384,13 @@ public class Reinforce {
 
     }
 
-    private static void handleError(String message) {
+    private void handleError(String message) {
         if (message.toLowerCase().contains("AuthFailure".toLowerCase())) {
             CommonUtil.prettyJson(adapter(ReturnCode.AUTHFAILURE));
         } else if (message.toLowerCase().contains("timed out".toLowerCase())) {
             CommonUtil.prettyJson(adapter(ReturnCode.TIMEOUT));
         } else {
-            System.out.println(message);
+            mLogger.warn(message);
         }
     }
 
@@ -399,8 +402,10 @@ public class Reinforce {
 
     public static class Builder {
         private Param param = new Param();
+        private Logger logger;
 
-        public Builder() {
+        public Builder(Logger logger) {
+            this.logger = logger;
             param.setUploadType("file");
             param.setDownloadType("file");
         }

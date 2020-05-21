@@ -36,7 +36,7 @@ def groupName = 'com.wcg.apk.reinforce'
 
 def artifactName = 'reinforce'
 
-def pubVersion = '0.0.4'
+def pubVersion = '0.0.5'
 
 group = groupName
 version = pubVersion

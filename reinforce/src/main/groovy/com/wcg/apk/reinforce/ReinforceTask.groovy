@@ -34,12 +34,12 @@ class ReinforceTask extends DefaultTask {
 
         SigningConfig signingConfig = variant.signingConfig
 
-        project.logger.warn("To reinforce apk : ${apkFile.toString()}")
+        project.logger.warn("To reinforce apk: ${apkFile.toString()}")
 
         deleteFile(reinforceDir)
         reinforceDir.mkdirs()
 
-        def reinforce = new Reinforce.Builder()
+        def reinforce = new Reinforce.Builder(project.logger)
                 .setDownloadPath(reinforceDir.getAbsolutePath())
                 .setSid(extension.sid)
                 .setSkey(extension.skey)
@@ -82,7 +82,7 @@ class ReinforceTask extends DefaultTask {
         if (status != 0) {
             throw new GradleException("Failed to align apk")
         }
-        project.logger.warn("aligend apk : ${alignedApk}")
+        project.logger.warn("aligend apk: ${alignedApk}")
 
         String signCmd = "${apksigner} sign -v --ks ${signingConfig.storeFile.absolutePath} " +
                 "--ks-key-alias ${signingConfig.keyAlias} " +
@@ -107,7 +107,7 @@ class ReinforceTask extends DefaultTask {
             throw new GradleException("Failed to sign apk")
         }
 
-        project.logger.warn("Aligend and Signed apk : ${alignedSignedApk}")
+        project.logger.warn("Aligend and Signed apk: ${alignedSignedApk}")
 
         project.logger.warn("Reinforce apk done.")
     }
@@ -125,8 +125,7 @@ class ReinforceTask extends DefaultTask {
             for (def f : files) {
                 deleteFile(f)
             }
-        } else {
-            file.delete()
         }
+        file.delete()
     }
 }
