@@ -23,8 +23,14 @@ class EditAction implements Action<ManifestProcessorTask> {
 
     @Override
     void execute(ManifestProcessorTask task) {
-        def file = GradleCompat.getManifestOutputFile(task)
+        def files = GradleCompat.getManifestOutputFile(task)
         def logger = task.project.logger
+        files.each { file ->
+            scanManifest(file, logger)
+        }
+    }
+
+    private void scanManifest(File file, def logger) {
         logger.lifecycle("Found Manifest file {}", file.absolutePath)
 
         SAXReader reader = new SAXReader()
@@ -71,6 +77,5 @@ class EditAction implements Action<ManifestProcessorTask> {
 
         outManifest.renameTo(file)
         logger.lifecycle("Rewrite AndroidManifest.xml")
-
     }
 }

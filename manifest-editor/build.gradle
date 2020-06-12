@@ -27,7 +27,7 @@ def groupName = 'com.wcg.manifest.editor'
 
 def artifactName = 'manifest-editor'
 
-def pubVersion = '0.0.1'
+def pubVersion = '0.0.2'
 
 group = groupName
 version = pubVersion
