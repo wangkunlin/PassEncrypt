@@ -3,6 +3,13 @@ apply plugin: 'com.wcg.string-encrypt'
 apply plugin: 'com.wcg.rename-package'
 apply plugin: 'com.wcg.apk-reinforce'
 apply plugin: 'com.wcg.google-services'
+apply plugin: 'com.wcg.manifest-editor'
+
+editManifest {
+    application {
+        remove 'activity', 'name', 'com.spoon.pass.passencode.MainActivity'
+    }
+}
 
 def getPropertyFromLocalProperties(key) {
     File file = project.rootProject.file('local.properties')
