@@ -60,6 +60,7 @@ class DictionaryPlugin implements Plugin<Project> {
                 GenerateProguardDictionaryTask)
         dicTask.proguardFile = proguardFile
         dicTask.dictionaryFile = dictionaryFile
+        dicTask.proguardTask = task
 
         task.dependsOn(dicTask)
     }

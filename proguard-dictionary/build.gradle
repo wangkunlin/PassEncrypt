@@ -26,7 +26,7 @@ def groupName = 'com.wcg.proguard.dictionary'
 
 def artifactName = 'proguard-dictionary'
 
-def pubVersion = '0.0.1'
+def pubVersion = '0.0.2'
 
 group = groupName
 version = pubVersion

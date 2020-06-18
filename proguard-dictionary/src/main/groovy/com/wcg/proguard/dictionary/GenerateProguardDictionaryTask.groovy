@@ -2,6 +2,7 @@ package com.wcg.proguard.dictionary
 
 import com.google.common.io.Files
 import org.gradle.api.DefaultTask
+import org.gradle.api.Task
 import org.gradle.api.tasks.TaskAction
 
 import java.nio.charset.StandardCharsets
@@ -13,6 +14,7 @@ class GenerateProguardDictionaryTask extends DefaultTask {
 
     public File proguardFile
     public File dictionaryFile
+    public Task proguardTask
 
     @TaskAction
     void action() {
@@ -42,7 +44,11 @@ class GenerateProguardDictionaryTask extends DefaultTask {
             sb.append(generator.generate()).append('\n')
         }
 
-        Files.asCharSink(dictionaryFile, StandardCharsets.UTF_8).write(sb.toString())
+        String content = sb.toString()
+
+        Files.asCharSink(dictionaryFile, StandardCharsets.UTF_8).write(content)
+
+        proguardTask.inputs.property("proguard-dictironary", Utils.md5(content))
     }
 
     private static void deleteFile(File file) {
