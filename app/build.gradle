@@ -4,6 +4,11 @@ apply plugin: 'com.wcg.rename-package'
 apply plugin: 'com.wcg.apk-reinforce'
 apply plugin: 'com.wcg.google-services'
 apply plugin: 'com.wcg.manifest-editor'
+apply plugin: 'com.wcg.proguard-dictionary'
+
+dictionary {
+    count 10000 // default 8000
+}
 
 editManifest {
     application {
@@ -53,6 +58,7 @@ android {
         }
 
         debug {
+            minifyEnabled true
             resValue('string', 'res_value_test', 'test_res_value')
         }
     }
