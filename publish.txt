@@ -7,3 +7,4 @@
 ./gradlew clean :reinforce:bintrayUpload
 ./gradlew clean :google-services:bintrayUpload
 ./gradlew clean :manifest-editor:bintrayUpload
+./gradlew clean :proguard-dictionary:bintrayUpload
