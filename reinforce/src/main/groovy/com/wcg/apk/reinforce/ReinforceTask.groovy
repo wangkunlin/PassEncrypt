@@ -1,6 +1,8 @@
 package com.wcg.apk.reinforce
 
+import apksigner.ApkSignerTool
 import com.android.builder.model.SigningConfig
+import com.tencent.mm.resourceproguard.cli.CliMain
 import org.gradle.api.DefaultTask
 import org.gradle.api.GradleException
 import org.gradle.api.tasks.InputFile
@@ -33,25 +35,37 @@ class ReinforceTask extends DefaultTask {
         ReinforceExtension extension = project.extensions.getByType(ReinforceExtension)
 
         SigningConfig signingConfig = variant.signingConfig
+        int minSdkVersion = variant.mergedFlavor.minSdkVersion.apiLevel
 
         project.logger.warn("To reinforce apk: ${apkFile.toString()}")
 
         deleteFile(reinforceDir)
         reinforceDir.mkdirs()
 
-        def reinforce = new Reinforce.Builder(project.logger)
-                .setDownloadPath(reinforceDir.getAbsolutePath())
-                .setSid(extension.sid)
-                .setSkey(extension.skey)
-                .setUploadPath(apkFile.getAbsolutePath()).build()
-        int result = reinforce.start()
-        if (result != 0) {
-            throw new GradleException("")
+        // step 1 resguard if needed
+        String resguardApkPath = reguard(signingConfig, reinforceDir.absolutePath)
+        if (resguardApkPath == null) {
+            resguardApkPath = apkFile.absolutePath
         }
 
-        String reinforceApk = reinforce.getDownFilePath()
+        // step 2 reinforce
+        String reinforceApk = reinforce(extension, resguardApkPath)
 
-        String reinforceApkName = CommonUtil.getBaseName(new File(reinforceApk).getName())
+        // step 3 4k align apk
+        String reinforceApkName = CommonUtil.getBaseName(new File(reinforceApk).name)
+        String alignedApk = new File(reinforceDir, "${reinforceApkName}-aligned.apk")
+        aligneApk(reinforceApk, alignedApk)
+
+        // step 4 resign apk
+        String alignedSignedApk = new File(reinforceDir, "${reinforceApkName}-aligned-signed.apk")
+        signApk(alignedApk, alignedSignedApk, minSdkVersion, signingConfig)
+
+        project.logger.warn("Aligend and Signed apk: ${alignedSignedApk}")
+
+        project.logger.warn("Reinforce apk done.")
+    }
+
+    private void aligneApk(String inApk, String outApk) {
 
         String sdkDir = project.android.sdkDirectory.absolutePath
         String buildToolsVersion = project.android.buildToolsVersion
@@ -59,15 +73,11 @@ class ReinforceTask extends DefaultTask {
         project.logger.warn("buildToolsDir: ${buildToolsDir}")
 
         String zipalignName = isWindows() ? "zipalign.exe" : "zipalign"
-        String spksignerName = isWindows() ? "apksigner.bat" : "apksigner"
 
         String zipalign = "${buildToolsDir}${File.separator}${zipalignName}"
-        String apksigner = "${buildToolsDir}${File.separator}${spksignerName}"
 
-        String alignedApk = new File(reinforceDir, "${reinforceApkName}-aligned.apk")
-        String alignedSignedApk = new File(reinforceDir, "${reinforceApkName}-aligned-signed.apk")
 
-        String alignCmd = "${zipalign} 4 ${reinforceApk} ${alignedApk}"
+        String alignCmd = "${zipalign} 4 ${inApk} ${outApk}"
         project.logger.warn("start align apk")
         project.logger.warn("zipalign cmd: ${alignCmd}")
 
@@ -85,34 +95,100 @@ class ReinforceTask extends DefaultTask {
         if (status != 0) {
             throw new GradleException("Failed to align apk")
         }
-        project.logger.warn("aligend apk: ${alignedApk}")
+        project.logger.warn("aligend apk: ${outApk}")
+    }
 
-        String signCmd = "${apksigner} sign -v --ks ${signingConfig.storeFile.absolutePath} " +
-                "--ks-key-alias ${signingConfig.keyAlias} " +
-                "--ks-pass pass:${signingConfig.storePassword} " +
-                "--key-pass pass:${signingConfig.keyPassword} " +
-                "--out ${alignedSignedApk} ${alignedApk}"
+    private String reinforce(ReinforceExtension extension, String inApk) {
+        def reinforce = new Reinforce.Builder(project.logger)
+                .setDownloadPath(reinforceDir.absolutePath)
+                .setSid(extension.sid)
+                .setSkey(extension.skey)
+                .setUploadPath(inApk).build()
+        int result = reinforce.start()
+        if (result != 0) {
+            throw new GradleException("")
+        }
+        return reinforce.getDownFilePath()
+    }
+
+    private String reguard(SigningConfig signingConfig, String reinforceDir) {
+        ResguardExtension resguard = project.extensions.findByName("resguard") as ResguardExtension
+
+        File curDir = project.buildscript.sourceFile.parentFile
+        File file = new File(curDir, resguard.config)
+        try {
+            file = file.canonicalFile
+        } catch (Throwable e) {
+            e.printStackTrace()
+            file = file.absoluteFile
+        }
+        if (!file.exists()) {
+            return null
+        }
+
+        File resguardDir = new File(reinforceDir, "resguard")
+        resguardDir.mkdirs()
+
+        String fileName = CommonUtil.getBaseName(apkFile.name)
+
+        File resguardApkFile = new File(reinforceDir, "${fileName}-resguard.apk")
+
+        List<String> params = new ArrayList<>()
+        params.add(apkFile.absolutePath)
+        params.add("-config")
+        params.add(file.absolutePath)
+        params.add("-out")
+        params.add(resguardDir.absolutePath)
+        params.add("-signature")
+        params.add(signingConfig.storeFile.absolutePath)
+        params.add(signingConfig.storePassword)
+        params.add(signingConfig.keyPassword)
+        params.add(signingConfig.keyAlias)
+        params.add("-finalApkPath")
+        params.add(resguardApkFile.absolutePath)
+        params.add("-signatureType")
+        params.add("v2")
+
+        String[] runParams = toArray(params)
+        // resguard enter point
+        CliMain.main(runParams)
+        return resguardApkFile.absolutePath
+    }
+
+    private static String[] toArray(List<String> params) {
+        String[] runParams = new String[params.size()]
+        for (int i = 0; i < runParams.length; i++) {
+            runParams[i] = params.get(i)
+        }
+        return runParams
+    }
+
+    private void signApk(String inApk, String outApk, int minSdkVersion, SigningConfig signingConfig) {
+        List<String> params = new ArrayList<>()
+        params.add("sign")
+        params.add("-v")
+        params.add("--ks")
+        params.add(signingConfig.storeFile.absolutePath)
+        params.add("--ks-pass")
+        params.add("pass:${signingConfig.storePassword}")
+        params.add("--min-sdk-version")
+        params.add(String.valueOf(minSdkVersion))
+        params.add("--ks-key-alias")
+        params.add(signingConfig.keyAlias)
+        params.add("--key-pass")
+        params.add("pass:${signingConfig.keyPassword}")
+        params.add("--v1-signing-enabled")
+        params.add("true")
+        params.add("--v2-signing-enabled")
+        params.add("true")
+        params.add("--out")
+        params.add(outApk)
+        params.add(inApk)
+
         project.logger.warn("start sign apk")
-        project.logger.warn("sign apk cmd: ${signCmd}")
-
-        pro = runtime.exec(signCmd)
-        status = pro.waitFor()
-
-        br = new BufferedReader(new InputStreamReader(pro.getInputStream()))
-
-        while ((line = br.readLine()) != null) {
-            project.logger.warn(line)
-        }
-
-        br.close()
-
-        if (status != 0) {
-            throw new GradleException("Failed to sign apk")
-        }
-
-        project.logger.warn("Aligend and Signed apk: ${alignedSignedApk}")
-
-        project.logger.warn("Reinforce apk done.")
+        project.logger.warn("sign apk cmd: ${params.join(" ")}")
+        String[] runParams = toArray(params)
+        ApkSignerTool.main(runParams)
     }
 
     private static boolean isWindows() {
@@ -131,4 +207,5 @@ class ReinforceTask extends DefaultTask {
         }
         file.delete()
     }
+
 }

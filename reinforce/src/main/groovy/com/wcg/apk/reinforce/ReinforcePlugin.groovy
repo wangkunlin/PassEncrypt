@@ -17,6 +17,7 @@ class ReinforcePlugin implements Plugin<Project> {
         }
 
         ReinforceExtension extension = project.extensions.create("reinforce", ReinforceExtension)
+        project.extensions.add("resguard", new ResguardExtension("resguard"))
         project.afterEvaluate {
             if (extension.sid == null || extension.sid.isEmpty()) {
                 throw new IllegalStateException("sid is null.")

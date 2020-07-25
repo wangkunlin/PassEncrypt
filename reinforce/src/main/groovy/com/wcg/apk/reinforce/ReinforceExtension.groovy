@@ -1,5 +1,4 @@
-package com.wcg.apk.reinforce;
-
+package com.wcg.apk.reinforce
 /**
  * On 2020-05-18
  */

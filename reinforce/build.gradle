@@ -8,6 +8,7 @@ dependencies {
     implementation gradleApi()
     implementation localGroovy()
 
+    implementation 'com.android.tools.build:apksig:3.6.1'
     compileOnly 'com.android.tools.build:gradle:3.6.1'
 
 }
@@ -36,18 +37,18 @@ def groupName = 'com.wcg.apk.reinforce'
 
 def artifactName = 'reinforce'
 
-def pubVersion = '0.0.6'
+def pubVersion = '0.0.7'
 
 group = groupName
 version = pubVersion
 
-//uploadArchives {
-//    repositories {
-//        mavenDeployer {
-//            repository(url: uri("../repo"))
-//        }
-//    }
-//}
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            repository(url: uri("../repo"))
+        }
+    }
+}
 
 publish {
     userOrg = 'wangkunlin1992'

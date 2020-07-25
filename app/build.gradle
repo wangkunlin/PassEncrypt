@@ -28,6 +28,10 @@ def getPropertyFromLocalProperties(key) {
 reinforce {
     sid getPropertyFromLocalProperties("tencent.sid")
     skey getPropertyFromLocalProperties("tencent.skey")
+
+    resguard {
+        config 'config.xml'
+    }
 }
 
 renamePackage {
