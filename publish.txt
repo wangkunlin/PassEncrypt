@@ -8,3 +8,4 @@
 ./gradlew clean :google-services:bintrayUpload
 ./gradlew clean :manifest-editor:bintrayUpload
 ./gradlew clean :proguard-dictionary:bintrayUpload
+./gradlew clean :keystore-generator:bintrayUpload
