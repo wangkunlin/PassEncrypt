@@ -5,15 +5,16 @@ apply plugin: 'com.wcg.apk-reinforce'
 apply plugin: 'com.wcg.google-services'
 apply plugin: 'com.wcg.manifest-editor'
 apply plugin: 'com.wcg.proguard-dictionary'
+apply plugin: 'com.wcg.keystore-generator'
 
 dictionary {
     count 10000 // default 8000
 }
 
 editManifest {
-    application {
-        remove 'activity', 'name', 'com.spoon.pass.passencode.MainActivity'
-    }
+//    application {
+//        remove 'activity', 'name', 'com.spoon.pass.passencode.MainActivity'
+//    }
 }
 
 def getPropertyFromLocalProperties(key) {
@@ -53,6 +54,15 @@ android {
         targetSdkVersion 29
         versionCode 1
         versionName "1.0"
+    }
+
+    signingConfigs {
+        debug {
+            storeFile file("keystore.jks")
+            storePassword "test"
+            keyAlias "test"
+            keyPassword "test"
+        }
     }
 
     buildTypes {

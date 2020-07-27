@@ -7,11 +7,8 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation gradleApi()
     implementation localGroovy()
-
     compileOnly 'com.android.tools.build:gradle:3.6.1'
-
 }
-
 
 def getPropertyFromLocalProperties(key) {
     File file = project.rootProject.file('local.properties')
@@ -22,11 +19,11 @@ def getPropertyFromLocalProperties(key) {
     }
 }
 
-def groupName = 'com.wcg.proguard.dictionary'
+def groupName = 'com.wcg.keystore.generator'
 
-def artifactName = 'proguard-dictionary'
+def artifactName = 'keystore-generator'
 
-def pubVersion = '0.0.3'
+def pubVersion = '0.0.1'
 
 group = groupName
 version = pubVersion
@@ -45,7 +42,7 @@ publish {
     artifactId = artifactName
     publishVersion = pubVersion
     uploadName = groupName + ':' + artifactName
-    desc = 'a gradle plugin to generate proguard dictionary file'
+    desc = 'a gradle plugin to generate missing key store'
     website = 'https://github.com/wangkunlin/PassEncrypt'
     bintrayUser = getPropertyFromLocalProperties('bintray.user')
     bintrayKey = getPropertyFromLocalProperties('bintray.apikey')

@@ -37,8 +37,8 @@ public class ResourceApkBuilder {
 
   private File m7ZipApk;
 
-  private File mAlignedApk;
-  private File mAlignedWith7ZipApk;
+//  private File mAlignedApk;
+//  private File mAlignedWith7ZipApk;
 
   private String mApkName;
   private File finalApkFile;
@@ -53,41 +53,41 @@ public class ResourceApkBuilder {
     this.finalApkFile = finalApkFile;
   }
 
-  public void buildApkWithV1sign(HashMap<String, Integer> compressData) throws IOException, InterruptedException {
-    insureFileNameV1();
-    generalUnsignApk(compressData);
-    signApkV1(mUnSignedApk, mSignedApk);
-    use7zApk(compressData, mSignedApk, mSignedWith7ZipApk);
-    alignApks();
-    copyFinalApkV1();
-  }
+//  public void buildApkWithV1sign(HashMap<String, Integer> compressData) throws IOException, InterruptedException {
+//    insureFileNameV1();
+//    generalUnsignApk(compressData);
+//    signApkV1(mUnSignedApk, mSignedApk);
+//    use7zApk(compressData, mSignedApk, mSignedWith7ZipApk);
+//    alignApks();
+//    copyFinalApkV1();
+//  }
 
-  private void copyFinalApkV1() throws IOException {
-    if (finalApkFile != null) {
-      System.out.println(String.format("Backup Final APk(V1) to %s", finalApkFile));
-      if (mSignedWith7ZipApk.exists()) {
-        FileOperation.copyFileUsingStream(mAlignedWith7ZipApk, finalApkFile);
-      } else if (mSignedApk.exists()) {
-        FileOperation.copyFileUsingStream(mAlignedApk, finalApkFile);
-      }
-    }
-  }
+//  private void copyFinalApkV1() throws IOException {
+//    if (finalApkFile != null) {
+//      System.out.println(String.format("Backup Final APk(V1) to %s", finalApkFile));
+//      if (mSignedWith7ZipApk.exists()) {
+//        FileOperation.copyFileUsingStream(mAlignedWith7ZipApk, finalApkFile);
+//      } else if (mSignedApk.exists()) {
+//        FileOperation.copyFileUsingStream(mAlignedApk, finalApkFile);
+//      }
+//    }
+//  }
 
   public void buildApkWithV2sign(HashMap<String, Integer> compressData, int minSDKVersion) throws Exception {
     insureFileNameV2();
     generalUnsignApk(compressData);
-    if (use7zApk(compressData, mUnSignedApk, m7ZipApk)) {
-      alignApk(m7ZipApk, mAlignedApk);
-    } else {
-      alignApk(mUnSignedApk, mAlignedApk);
-    }
+//    if (use7zApk(compressData, mUnSignedApk, m7ZipApk)) {
+//      alignApk(m7ZipApk, mAlignedApk);
+//    } else {
+//      alignApk(mUnSignedApk, mAlignedApk);
+//    }
 
     /*
      * Caution: If you sign your app using APK Signature Scheme v2 and make further changes to the app,
      * the app's signature is invalidated.
      * For this reason, use tools such as zipalign before signing your app using APK Signature Scheme v2, not after.
      **/
-    signApkV2(mAlignedApk, mSignedApk, minSDKVersion);
+    signApkV2(mUnSignedApk, mSignedApk, minSDKVersion);
     copyFinalApkV2();
   }
 
@@ -98,24 +98,24 @@ public class ResourceApkBuilder {
     }
   }
 
-  private void insureFileNameV1() {
-    mUnSignedApk = new File(mOutDir.getAbsolutePath(), mApkName + "_unsigned.apk");
-    mSignedWith7ZipApk = new File(mOutDir.getAbsolutePath(), mApkName + "_signed_7zip.apk");
-    mSignedApk = new File(mOutDir.getAbsolutePath(), mApkName + "_signed.apk");
-    mAlignedApk = new File(mOutDir.getAbsolutePath(), mApkName + "_signed_aligned.apk");
-    mAlignedWith7ZipApk = new File(mOutDir.getAbsolutePath(), mApkName + "_signed_7zip_aligned.apk");
-    m7zipOutPutDir = new File(mOutDir.getAbsolutePath(), TypedValue.OUT_7ZIP_FILE_PATH);
-  }
+//  private void insureFileNameV1() {
+//    mUnSignedApk = new File(mOutDir.getAbsolutePath(), mApkName + "_unsigned.apk");
+//    mSignedWith7ZipApk = new File(mOutDir.getAbsolutePath(), mApkName + "_signed_7zip.apk");
+//    mSignedApk = new File(mOutDir.getAbsolutePath(), mApkName + "_signed.apk");
+//    mAlignedApk = new File(mOutDir.getAbsolutePath(), mApkName + "_signed_aligned.apk");
+//    mAlignedWith7ZipApk = new File(mOutDir.getAbsolutePath(), mApkName + "_signed_7zip_aligned.apk");
+//    m7zipOutPutDir = new File(mOutDir.getAbsolutePath(), TypedValue.OUT_7ZIP_FILE_PATH);
+//  }
 
   private void insureFileNameV2() {
     mUnSignedApk = new File(mOutDir.getAbsolutePath(), mApkName + "_unsigned.apk");
     m7ZipApk = new File(mOutDir.getAbsolutePath(), mApkName + "_7zip_unsigned.apk");
     if (config.mUse7zip) {
-      mAlignedApk = new File(mOutDir.getAbsolutePath(), mApkName + "_7zip_aligned_unsigned.apk");
-      mSignedApk = new File(mOutDir.getAbsolutePath(), mApkName + "_7zip_aligned_signed.apk");
+//      mAlignedApk = new File(mOutDir.getAbsolutePath(), mApkName + "_7zip_aligned_unsigned.apk");
+      mSignedApk = new File(mOutDir.getAbsolutePath(), mApkName + "_7zip_signed.apk");
     } else {
-      mAlignedApk = new File(mOutDir.getAbsolutePath(), mApkName + "_aligned_unsigned.apk");
-      mSignedApk = new File(mOutDir.getAbsolutePath(), mApkName + "_aligned_signed.apk");
+//      mAlignedApk = new File(mOutDir.getAbsolutePath(), mApkName + "_aligned_unsigned.apk");
+      mSignedApk = new File(mOutDir.getAbsolutePath(), mApkName + "_signed.apk");
     }
     m7zipOutPutDir = new File(mOutDir.getAbsolutePath(), TypedValue.OUT_7ZIP_FILE_PATH);
   }
@@ -260,37 +260,37 @@ public class ResourceApkBuilder {
     Utils.runExec(argv);
   }
 
-  private void alignApks() throws IOException, InterruptedException {
-    //如果不签名就肯定不需要对齐了
-    if (!config.mUseSignAPK) {
-      return;
-    }
-    if (!mSignedApk.exists() && !mSignedWith7ZipApk.exists()) {
-      throw new IOException("Can not found any signed apk file");
-    }
-    if (mSignedApk.exists()) {
-      alignApk(mSignedApk, mAlignedApk);
-    }
-    if (mSignedWith7ZipApk.exists()) {
-      alignApk(mSignedWith7ZipApk, mAlignedWith7ZipApk);
-    }
-  }
+//  private void alignApks() throws IOException, InterruptedException {
+//    //如果不签名就肯定不需要对齐了
+//    if (!config.mUseSignAPK) {
+//      return;
+//    }
+//    if (!mSignedApk.exists() && !mSignedWith7ZipApk.exists()) {
+//      throw new IOException("Can not found any signed apk file");
+//    }
+//    if (mSignedApk.exists()) {
+//      alignApk(mSignedApk, mAlignedApk);
+//    }
+//    if (mSignedWith7ZipApk.exists()) {
+//      alignApk(mSignedWith7ZipApk, mAlignedWith7ZipApk);
+//    }
+//  }
 
-  private void alignApk(File before, File after) throws IOException, InterruptedException {
-    System.out.printf("zipaligning apk: %s, exists:%b\n", before.getAbsolutePath(), before.exists());
-    if (!before.exists()) {
-      throw new IOException(String.format("can not found the raw apk file to zipalign, path=%s",
-          before.getAbsolutePath()
-      ));
-    }
-    String cmd = Utils.isPresent(config.mZipalignPath) ? config.mZipalignPath : TypedValue.COMMAND_ZIPALIGIN;
-    Utils.runCmd(cmd, "4", before.getAbsolutePath(), after.getAbsolutePath());
-    if (!after.exists()) {
-      throw new IOException(String.format("can not found the aligned apk file, the ZipAlign path is correct? path=%s",
-          mAlignedApk.getAbsolutePath()
-      ));
-    }
-  }
+//  private void alignApk(File before, File after) throws IOException, InterruptedException {
+//    System.out.printf("zipaligning apk: %s, exists:%b\n", before.getAbsolutePath(), before.exists());
+//    if (!before.exists()) {
+//      throw new IOException(String.format("can not found the raw apk file to zipalign, path=%s",
+//          before.getAbsolutePath()
+//      ));
+//    }
+//    String cmd = Utils.isPresent(config.mZipalignPath) ? config.mZipalignPath : TypedValue.COMMAND_ZIPALIGIN;
+//    Utils.runCmd(cmd, "4", before.getAbsolutePath(), after.getAbsolutePath());
+//    if (!after.exists()) {
+//      throw new IOException(String.format("can not found the aligned apk file, the ZipAlign path is correct? path=%s",
+//          mAlignedApk.getAbsolutePath()
+//      ));
+//    }
+//  }
 
   private void generalUnsignApk(HashMap<String, Integer> compressData) throws IOException, InterruptedException {
     System.out.printf("General unsigned apk: %s\n", mUnSignedApk.getName());

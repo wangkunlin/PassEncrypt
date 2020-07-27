@@ -123,9 +123,9 @@ public class Main {
     builder.setOutDir(mOutDir, apkBasename, outputFile);
     System.out.printf("[AndResGuard] buildApk signatureType: %s\n", signatureType);
     switch (signatureType) {
-      case SchemaV1:
-        builder.buildApkWithV1sign(decoder.getCompressData());
-        break;
+//      case SchemaV1:
+//        builder.buildApkWithV1sign(decoder.getCompressData());
+//        break;
       case SchemaV2:
         builder.buildApkWithV2sign(decoder.getCompressData(), minSDKVersion);
         break;
