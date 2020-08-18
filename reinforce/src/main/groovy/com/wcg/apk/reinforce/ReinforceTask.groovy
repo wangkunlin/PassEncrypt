@@ -29,8 +29,7 @@ class ReinforceTask extends DefaultTask {
     void execute() {
 
         ReinforceExtension extension = project.extensions.getByType(ReinforceExtension)
-        ResguardExtension resguard = project.extensions.findByName("resguard") as ResguardExtension
-        if (!extension.enabled && (resguard != null && !resguard.enabled)) {
+        if (extension.disable && resguardDisabled()) {
             project.logger.lifecycle("Reinforce: Skip run")
             return
         }
@@ -48,7 +47,7 @@ class ReinforceTask extends DefaultTask {
         reinforceDir.mkdirs()
 
         // step 1 resguard if needed
-        String resguardApkPath = reguard(signingConfig, extension.enabled, reinforceDir.absolutePath)
+        String resguardApkPath = reguard(signingConfig, extension.disable, reinforceDir.absolutePath)
         if (resguardApkPath == null) {
             resguardApkPath = apkFile.absolutePath
         }
@@ -104,7 +103,7 @@ class ReinforceTask extends DefaultTask {
     }
 
     private String reinforce(ReinforceExtension extension, String inApk) {
-        if (!extension.enabled) {
+        if (extension.disable) {
             return inApk
         }
         def reinforce = new Reinforce.Builder(project.logger)
@@ -119,23 +118,30 @@ class ReinforceTask extends DefaultTask {
         return reinforce.getDownFilePath()
     }
 
-    private String reguard(SigningConfig signingConfig, boolean reinforce, String reinforceDir) {
+    private boolean resguardDisabled() {
         ResguardExtension resguard = project.extensions.findByName("resguard") as ResguardExtension
 
-        if (!resguard.enabled) {
+        if (resguard == null || resguard.disable || resguard.config == null) {
+            return true
+        }
+        File file = project.file(resguard.config)
+        if (file == null || !file.exists()) {
+            return true
+        }
+        return false
+    }
+
+    private String reguard(SigningConfig signingConfig, boolean disable, String reinforceDir) {
+        ResguardExtension resguard = project.extensions.findByName("resguard") as ResguardExtension
+
+        if (resguardDisabled()) {
             return apkFile.absolutePath
         }
 
-        File curDir = project.buildscript.sourceFile.parentFile
-        File file = new File(curDir, resguard.config)
-        try {
-            file = file.canonicalFile
-        } catch (Throwable e) {
-            e.printStackTrace()
-            file = file.absoluteFile
-        }
+        File file = project.file(resguard.config)
+        project.logger.lifecycle("Resguard config file: ${file.absolutePath}")
         if (!file.exists()) {
-            return null
+            return apkFile.absolutePath
         }
 
         File resguardDir = new File(reinforceDir, "resguard")
@@ -151,7 +157,7 @@ class ReinforceTask extends DefaultTask {
         params.add(file.absolutePath)
         params.add("-out")
         params.add(resguardDir.absolutePath)
-        if (reinforce) {
+        if (!disable) {
             params.add("-signature")
             params.add(signingConfig.storeFile.absolutePath)
             params.add(signingConfig.storePassword)
