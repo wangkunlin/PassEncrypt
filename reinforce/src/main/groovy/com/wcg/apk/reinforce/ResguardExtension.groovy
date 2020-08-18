@@ -9,6 +9,7 @@ class ResguardExtension implements Named {
 
     private final String name
     String config
+    boolean enabled = true
 
     ResguardExtension(String name) {
         this.name = name
@@ -25,5 +26,13 @@ class ResguardExtension implements Named {
 
     void config(String config) {
         this.config = config
+    }
+
+    boolean getEnabled() {
+        return enabled
+    }
+
+    void enabled(boolean enabled) {
+        this.enabled = enabled
     }
 }

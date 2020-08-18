@@ -27,10 +27,12 @@ def getPropertyFromLocalProperties(key) {
 }
 
 reinforce {
+    enabled true
     sid getPropertyFromLocalProperties("tencent.sid")
     skey getPropertyFromLocalProperties("tencent.skey")
 
     resguard {
+        enabled true
         config 'config.xml'
     }
 }

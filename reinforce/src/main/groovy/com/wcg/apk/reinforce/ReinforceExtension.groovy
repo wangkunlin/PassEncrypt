@@ -7,4 +7,6 @@ class ReinforceExtension {
     String sid
 
     String skey
+
+    boolean enabled = true
 }

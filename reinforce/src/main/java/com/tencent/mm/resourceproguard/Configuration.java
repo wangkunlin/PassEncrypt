@@ -1,6 +1,14 @@
 package com.tencent.mm.resourceproguard;
 
 import com.tencent.mm.util.Utils;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.File;
@@ -12,15 +20,10 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
 
 /**
  * @author shwenzhang
@@ -52,7 +55,7 @@ public class Configuration {
   public final HashSet<Pattern> mCompressPatterns;
   public final String digestAlg;
   private final Pattern MAP_PATTERN = Pattern.compile("\\s+(.*)->(.*)");
-  public boolean mUse7zip = true;
+  public boolean mUse7zip = false;
   public boolean mKeepRoot = false;
   public boolean mMergeDuplicatedRes = false;
   public String mMetaName = "META-INF";
@@ -133,7 +136,7 @@ public class Configuration {
       mUseWhiteList = true;
       addWhiteList(item);
     }
-    mUse7zip = param.use7zip;
+//    mUse7zip = param.use7zip;
     mKeepRoot = param.keepRoot;
     mMergeDuplicatedRes = param.mergeDuplicatedRes;
     mMetaName = param.metaName;
@@ -422,7 +425,7 @@ public class Configuration {
 
           switch (tagName) {
             case ATTR_7ZIP:
-              mUse7zip = vaule.equals("true");
+//              mUse7zip = vaule.equals("true");
               break;
             case ATTR_KEEPROOT:
               mKeepRoot = vaule.equals("true");

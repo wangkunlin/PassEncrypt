@@ -15,7 +15,7 @@ buildscript {
 
         classpath 'com.wcg.field.encrypt:string-encrypt:0.0.13'
         classpath 'com.wcg.field.encrypt:rename-package:0.0.1'
-        classpath 'com.wcg.apk.reinforce:reinforce:0.0.8'
+        classpath 'com.wcg.apk.reinforce:reinforce:0.0.9'
         classpath 'com.wcg.google.services:google-services:0.0.1'
         classpath 'com.wcg.manifest.editor:manifest-editor:0.0.2'
         classpath 'com.wcg.proguard.dictionary:proguard-dictionary:0.0.3'

@@ -35,9 +35,9 @@ public class ResourceApkBuilder {
   private File mSignedApk;
   private File mSignedWith7ZipApk;
 
-  private File m7ZipApk;
+//  private File m7ZipApk;
 
-//  private File mAlignedApk;
+  private File mAlignedApk;
 //  private File mAlignedWith7ZipApk;
 
   private String mApkName;
@@ -53,25 +53,25 @@ public class ResourceApkBuilder {
     this.finalApkFile = finalApkFile;
   }
 
-//  public void buildApkWithV1sign(HashMap<String, Integer> compressData) throws IOException, InterruptedException {
-//    insureFileNameV1();
-//    generalUnsignApk(compressData);
-//    signApkV1(mUnSignedApk, mSignedApk);
+  public void buildApkWithV1sign(HashMap<String, Integer> compressData) throws IOException, InterruptedException {
+    insureFileNameV1();
+    generalUnsignApk(compressData);
+    signApkV1(mUnSignedApk, mSignedApk);
 //    use7zApk(compressData, mSignedApk, mSignedWith7ZipApk);
 //    alignApks();
-//    copyFinalApkV1();
-//  }
+    copyFinalApkV1();
+  }
 
-//  private void copyFinalApkV1() throws IOException {
-//    if (finalApkFile != null) {
-//      System.out.println(String.format("Backup Final APk(V1) to %s", finalApkFile));
-//      if (mSignedWith7ZipApk.exists()) {
-//        FileOperation.copyFileUsingStream(mAlignedWith7ZipApk, finalApkFile);
-//      } else if (mSignedApk.exists()) {
-//        FileOperation.copyFileUsingStream(mAlignedApk, finalApkFile);
-//      }
-//    }
-//  }
+  private void copyFinalApkV1() throws IOException {
+    if (finalApkFile != null) {
+      System.out.println(String.format("Backup Final APk(V1) to %s", finalApkFile));
+      /*if (mSignedWith7ZipApk.exists()) {
+        FileOperation.copyFileUsingStream(mAlignedWith7ZipApk, finalApkFile);
+      } else*/ if (mSignedApk.exists()) {
+        FileOperation.copyFileUsingStream(mSignedApk, finalApkFile);
+      }
+    }
+  }
 
   public void buildApkWithV2sign(HashMap<String, Integer> compressData, int minSDKVersion) throws Exception {
     insureFileNameV2();
@@ -98,23 +98,23 @@ public class ResourceApkBuilder {
     }
   }
 
-//  private void insureFileNameV1() {
-//    mUnSignedApk = new File(mOutDir.getAbsolutePath(), mApkName + "_unsigned.apk");
-//    mSignedWith7ZipApk = new File(mOutDir.getAbsolutePath(), mApkName + "_signed_7zip.apk");
-//    mSignedApk = new File(mOutDir.getAbsolutePath(), mApkName + "_signed.apk");
-//    mAlignedApk = new File(mOutDir.getAbsolutePath(), mApkName + "_signed_aligned.apk");
+  private void insureFileNameV1() {
+    mUnSignedApk = new File(mOutDir.getAbsolutePath(), mApkName + "_unsigned.apk");
+    mSignedWith7ZipApk = new File(mOutDir.getAbsolutePath(), mApkName + "_signed_7zip.apk");
+    mSignedApk = new File(mOutDir.getAbsolutePath(), mApkName + "_signed.apk");
+    mAlignedApk = new File(mOutDir.getAbsolutePath(), mApkName + "_signed_aligned.apk");
 //    mAlignedWith7ZipApk = new File(mOutDir.getAbsolutePath(), mApkName + "_signed_7zip_aligned.apk");
-//    m7zipOutPutDir = new File(mOutDir.getAbsolutePath(), TypedValue.OUT_7ZIP_FILE_PATH);
-//  }
+    m7zipOutPutDir = new File(mOutDir.getAbsolutePath(), TypedValue.OUT_7ZIP_FILE_PATH);
+  }
 
   private void insureFileNameV2() {
     mUnSignedApk = new File(mOutDir.getAbsolutePath(), mApkName + "_unsigned.apk");
-    m7ZipApk = new File(mOutDir.getAbsolutePath(), mApkName + "_7zip_unsigned.apk");
+//    m7ZipApk = new File(mOutDir.getAbsolutePath(), mApkName + "_7zip_unsigned.apk");
     if (config.mUse7zip) {
-//      mAlignedApk = new File(mOutDir.getAbsolutePath(), mApkName + "_7zip_aligned_unsigned.apk");
+      mAlignedApk = new File(mOutDir.getAbsolutePath(), mApkName + "_7zip_aligned_unsigned.apk");
       mSignedApk = new File(mOutDir.getAbsolutePath(), mApkName + "_7zip_signed.apk");
     } else {
-//      mAlignedApk = new File(mOutDir.getAbsolutePath(), mApkName + "_aligned_unsigned.apk");
+      mAlignedApk = new File(mOutDir.getAbsolutePath(), mApkName + "_aligned_unsigned.apk");
       mSignedApk = new File(mOutDir.getAbsolutePath(), mApkName + "_signed.apk");
     }
     m7zipOutPutDir = new File(mOutDir.getAbsolutePath(), TypedValue.OUT_7ZIP_FILE_PATH);
@@ -200,6 +200,8 @@ public class ResourceApkBuilder {
       if (!signedApk.exists()) {
         throw new IOException("Can't Generate signed APK. Plz check your v1sign info is correct.");
       }
+    } else {
+      FileOperation.copyFileUsingStream(unSignedApk, signedApk);
     }
   }
 

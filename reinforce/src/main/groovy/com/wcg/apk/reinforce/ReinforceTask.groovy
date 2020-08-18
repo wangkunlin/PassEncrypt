@@ -28,22 +28,27 @@ class ReinforceTask extends DefaultTask {
     @TaskAction
     void execute() {
 
+        ReinforceExtension extension = project.extensions.getByType(ReinforceExtension)
+        ResguardExtension resguard = project.extensions.findByName("resguard") as ResguardExtension
+        if (!extension.enabled && (resguard != null && !resguard.enabled)) {
+            project.logger.lifecycle("Reinforce: Skip run")
+            return
+        }
+
         if (!variant.isSigningReady()) {
             throw new GradleException("${variant.name} sign not config")
         }
 
-        ReinforceExtension extension = project.extensions.getByType(ReinforceExtension)
-
         SigningConfig signingConfig = variant.signingConfig
         int minSdkVersion = variant.mergedFlavor.minSdkVersion.apiLevel
 
-        project.logger.warn("To reinforce apk: ${apkFile.toString()}")
+        project.logger.lifecycle("To reinforce apk: ${apkFile.toString()}")
 
         deleteFile(reinforceDir)
         reinforceDir.mkdirs()
 
         // step 1 resguard if needed
-        String resguardApkPath = reguard(signingConfig, reinforceDir.absolutePath)
+        String resguardApkPath = reguard(signingConfig, extension.enabled, reinforceDir.absolutePath)
         if (resguardApkPath == null) {
             resguardApkPath = apkFile.absolutePath
         }
@@ -60,9 +65,9 @@ class ReinforceTask extends DefaultTask {
         String alignedSignedApk = new File(reinforceDir, "${reinforceApkName}-aligned-signed.apk")
         signApk(alignedApk, alignedSignedApk, minSdkVersion, signingConfig)
 
-        project.logger.warn("Aligend and Signed apk: ${alignedSignedApk}")
+        project.logger.lifecycle("Aligend and Signed apk: ${alignedSignedApk}")
 
-        project.logger.warn("Reinforce apk done.")
+        project.logger.lifecycle("Reinforce apk done.")
     }
 
     private void aligneApk(String inApk, String outApk) {
@@ -70,7 +75,7 @@ class ReinforceTask extends DefaultTask {
         String sdkDir = project.android.sdkDirectory.absolutePath
         String buildToolsVersion = project.android.buildToolsVersion
         String buildToolsDir = "${sdkDir}${File.separator}build-tools${File.separator}${buildToolsVersion}"
-        project.logger.warn("buildToolsDir: ${buildToolsDir}")
+        project.logger.lifecycle("buildToolsDir: ${buildToolsDir}")
 
         String zipalignName = isWindows() ? "zipalign.exe" : "zipalign"
 
@@ -78,8 +83,8 @@ class ReinforceTask extends DefaultTask {
 
 
         String alignCmd = "${zipalign} 4 ${inApk} ${outApk}"
-        project.logger.warn("start align apk")
-        project.logger.warn("zipalign cmd: ${alignCmd}")
+        project.logger.lifecycle("start align apk")
+        project.logger.lifecycle("zipalign cmd: ${alignCmd}")
 
         def runtime = Runtime.getRuntime()
         Process pro = runtime.exec(alignCmd)
@@ -88,17 +93,20 @@ class ReinforceTask extends DefaultTask {
 
         String line
         while ((line = br.readLine()) != null) {
-            project.logger.warn(line)
+            project.logger.lifecycle(line)
         }
         br.close()
 
         if (status != 0) {
-            throw new GradleException("Failed to align apk")
+            throw new GradleException("Failed to align apk, exit code: ${status}")
         }
-        project.logger.warn("aligend apk: ${outApk}")
+        project.logger.lifecycle("aligend apk: ${outApk}")
     }
 
     private String reinforce(ReinforceExtension extension, String inApk) {
+        if (!extension.enabled) {
+            return inApk
+        }
         def reinforce = new Reinforce.Builder(project.logger)
                 .setDownloadPath(reinforceDir.absolutePath)
                 .setSid(extension.sid)
@@ -111,8 +119,12 @@ class ReinforceTask extends DefaultTask {
         return reinforce.getDownFilePath()
     }
 
-    private String reguard(SigningConfig signingConfig, String reinforceDir) {
+    private String reguard(SigningConfig signingConfig, boolean reinforce, String reinforceDir) {
         ResguardExtension resguard = project.extensions.findByName("resguard") as ResguardExtension
+
+        if (!resguard.enabled) {
+            return apkFile.absolutePath
+        }
 
         File curDir = project.buildscript.sourceFile.parentFile
         File file = new File(curDir, resguard.config)
@@ -139,15 +151,17 @@ class ReinforceTask extends DefaultTask {
         params.add(file.absolutePath)
         params.add("-out")
         params.add(resguardDir.absolutePath)
-        params.add("-signature")
-        params.add(signingConfig.storeFile.absolutePath)
-        params.add(signingConfig.storePassword)
-        params.add(signingConfig.keyPassword)
-        params.add(signingConfig.keyAlias)
+        if (reinforce) {
+            params.add("-signature")
+            params.add(signingConfig.storeFile.absolutePath)
+            params.add(signingConfig.storePassword)
+            params.add(signingConfig.keyPassword)
+            params.add(signingConfig.keyAlias)
+            params.add("-signatureType")
+            params.add("v2")
+        }
         params.add("-finalApkPath")
         params.add(resguardApkFile.absolutePath)
-        params.add("-signatureType")
-        params.add("v2")
 
         String[] runParams = toArray(params)
         // resguard enter point
@@ -185,8 +199,8 @@ class ReinforceTask extends DefaultTask {
         params.add(outApk)
         params.add(inApk)
 
-        project.logger.warn("start sign apk")
-        project.logger.warn("sign apk cmd: ${params.join(" ")}")
+        project.logger.lifecycle("start sign apk")
+        project.logger.lifecycle("sign apk cmd: ${params.join(" ")}")
         String[] runParams = toArray(params)
         ApkSignerTool.main(runParams)
     }
