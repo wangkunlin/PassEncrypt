@@ -2,11 +2,7 @@ package com.wcg.manifest.editor.run
 
 import com.android.build.gradle.tasks.ManifestProcessorTask
 import com.wcg.manifest.editor.extension.ManifestExtension
-import org.dom4j.QName
-import org.dom4j.Namespace
-import org.dom4j.io.OutputFormat
-import org.dom4j.io.SAXReader
-import org.dom4j.io.XMLWriter
+import groovy.xml.QName
 import org.gradle.api.Action
 
 /**
@@ -26,6 +22,7 @@ class EditAction implements Action<ManifestProcessorTask> {
         def files = GradleCompat.getManifestOutputFile(task)
         def logger = task.project.logger
         files.each { file ->
+            logger.lifecycle("get manifest file: ${file}")
             scanManifest(file, logger)
         }
     }
@@ -33,27 +30,18 @@ class EditAction implements Action<ManifestProcessorTask> {
     private void scanManifest(File file, def logger) {
         logger.lifecycle("Found Manifest file {}", file.absolutePath)
 
-        SAXReader reader = new SAXReader()
-        def document = reader.read(file)
+        def manifest = new XmlParser().parse(file)
 
-        def rootElement = document.rootElement
-
-        def application = rootElement.element("application")
-
-        def namespace = Namespace.get("android", ANDROID_NAMESPACE)
+        def application = manifest.application[0]
 
         mExtension.application.toRemove.each { remove ->
-            logger.lifecycle("Remove config {}", remove)
-            def nodes = application.elements(remove.what)
-
-            nodes.each { node ->
-                QName keyAttr = QName.get(remove.key, namespace)
-                def value = node.attributeValue(keyAttr)
-                if (value == remove.value) {
-                    application.remove(node)
-                    logger.lifecycle("Remove {}: {}", remove.what, remove.value)
-                }
-            }
+            QName qName = new QName(ANDROID_NAMESPACE, remove.key)
+            application."${remove.what}"
+                    .findAll { it.attribute(qName) == remove.value }
+                    .each {
+                        logger.lifecycle("Remove config ${remove}")
+                        application.remove(it)
+                    }
         }
 
         logger.lifecycle("Scan AndroidManifest.xml completed")
@@ -64,12 +52,11 @@ class EditAction implements Action<ManifestProcessorTask> {
             outManifest.delete()
         }
 
-        OutputFormat format = OutputFormat.createPrettyPrint()
-        format.indentSize = 4
-        format.encoding = "utf-8"
+        PrintWriter xmlWriter = new PrintWriter(new FileOutputStream(outManifest))
 
-        XMLWriter xmlWriter = new XMLWriter(new FileOutputStream(outManifest), format)
-        xmlWriter.write(document)
+        XmlNodePrinter printer = new XmlNodePrinter(xmlWriter, '    ', '"')
+        printer.print(manifest)
+
         xmlWriter.flush()
         xmlWriter.close()
 

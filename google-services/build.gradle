@@ -1,5 +1,5 @@
 apply plugin: 'groovy'
-apply plugin: 'com.novoda.bintray-release'
+//apply plugin: 'com.novoda.bintray-release'
 apply plugin: 'maven'
 apply plugin: 'maven-publish'
 
@@ -28,26 +28,26 @@ def artifactName = 'google-services'
 
 def pubVersion = '0.0.1'
 
-//group = groupName
-//version = pubVersion
-//
-//uploadArchives {
-//    repositories {
-//        mavenDeployer {
-//            repository(url: uri("../repo"))
-//        }
-//    }
-//}
+group = groupName
+version = pubVersion
 
-publish {
-    userOrg = 'wangkunlin1992'
-    groupId = groupName
-    artifactId = artifactName
-    publishVersion = pubVersion
-    uploadName = groupName + ':' + artifactName
-    desc = 'a gradle plugin to handle google-service.json'
-    website = 'https://github.com/wangkunlin/PassEncrypt'
-    bintrayUser = getPropertyFromLocalProperties('bintray.user')
-    bintrayKey = getPropertyFromLocalProperties('bintray.apikey')
-    dryRun = false
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            repository(url: uri("../repo"))
+        }
+    }
 }
+
+//publish {
+//    userOrg = 'wangkunlin1992'
+//    groupId = groupName
+//    artifactId = artifactName
+//    publishVersion = pubVersion
+//    uploadName = groupName + ':' + artifactName
+//    desc = 'a gradle plugin to handle google-service.json'
+//    website = 'https://github.com/wangkunlin/PassEncrypt'
+//    bintrayUser = getPropertyFromLocalProperties('bintray.user')
+//    bintrayKey = getPropertyFromLocalProperties('bintray.apikey')
+//    dryRun = false
+//}

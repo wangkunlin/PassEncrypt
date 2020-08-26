@@ -11,7 +11,6 @@
         <item name="viewInflaterClass">com.spoon.string.decrypt.text.DecryptViewInflater</item>
 
         <item name="testText">@string/app_name</item>
-        <item name="testText2">@string/to_enc</item>
         <item name="testText3">test_string</item>
 
     </style>

@@ -1,5 +1,5 @@
 apply plugin: 'java-library'
-apply plugin: 'com.novoda.bintray-release'
+//apply plugin: 'com.novoda.bintray-release'
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
@@ -26,15 +26,15 @@ def artifactName = 'encrypt-api'
 
 def pubVersion = '0.0.4'
 
-publish {
-    userOrg = 'wangkunlin1992'
-    groupId = groupName
-    artifactId = artifactName
-    publishVersion = pubVersion
-    uploadName = groupName + ':' + artifactName
-    desc = 'a gradle plugin to handle annotation'
-    website = 'https://github.com/wangkunlin/PassEncrypt'
-    bintrayUser = getPropertyFromLocalProperties('bintray.user')
-    bintrayKey = getPropertyFromLocalProperties('bintray.apikey')
-    dryRun = false
-}
+//publish {
+//    userOrg = 'wangkunlin1992'
+//    groupId = groupName
+//    artifactId = artifactName
+//    publishVersion = pubVersion
+//    uploadName = groupName + ':' + artifactName
+//    desc = 'a gradle plugin to handle annotation'
+//    website = 'https://github.com/wangkunlin/PassEncrypt'
+//    bintrayUser = getPropertyFromLocalProperties('bintray.user')
+//    bintrayKey = getPropertyFromLocalProperties('bintray.apikey')
+//    dryRun = false
+//}

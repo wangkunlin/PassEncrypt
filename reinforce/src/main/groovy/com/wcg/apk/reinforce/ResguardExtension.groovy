@@ -9,7 +9,7 @@ class ResguardExtension implements Named {
 
     private final String name
     String config
-    boolean disable = false
+    Boolean disable
 
     ResguardExtension(String name) {
         this.name = name

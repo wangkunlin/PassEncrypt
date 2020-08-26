@@ -1,5 +1,5 @@
 apply plugin: 'groovy'
-apply plugin: 'com.novoda.bintray-release'
+//apply plugin: 'com.novoda.bintray-release'
 apply plugin: 'maven'
 apply plugin: 'maven-publish'
 
@@ -7,7 +7,7 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation gradleApi()
     implementation localGroovy()
-    compileOnly 'com.android.tools.build:gradle:3.6.1'
+    compileOnly 'com.android.tools.build:gradle:4.0.1'
 }
 
 def getPropertyFromLocalProperties(key) {
@@ -23,29 +23,29 @@ def groupName = 'com.wcg.field.encrypt'
 
 def artifactName = 'rename-package'
 
-def pubVersion = '0.0.1'
+def pubVersion = '0.0.2'
 
-//group = groupName
-//version = pubVersion
-//
-//uploadArchives {
-//    repositories {
-//        mavenDeployer {
-//            repository(url: uri("../repo"))
-//        }
-//    }
-//}
+group = groupName
+version = pubVersion
 
-publish {
-    userOrg = 'wangkunlin1992'
-    groupId = groupName
-    artifactId = artifactName
-    publishVersion = pubVersion
-    uploadName = groupName + ':' + artifactName
-    desc = 'a gradle plugin to rename android package name, only works on debuggable = false'
-    website = 'https://github.com/wangkunlin/PassEncrypt'
-    bintrayUser = getPropertyFromLocalProperties('bintray.user')
-    bintrayKey = getPropertyFromLocalProperties('bintray.apikey')
-    dryRun = false
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            repository(url: uri("../repo"))
+        }
+    }
 }
+
+//publish {
+//    userOrg = 'wangkunlin1992'
+//    groupId = groupName
+//    artifactId = artifactName
+//    publishVersion = pubVersion
+//    uploadName = groupName + ':' + artifactName
+//    desc = 'a gradle plugin to rename android package name, only works on debuggable = false'
+//    website = 'https://github.com/wangkunlin/PassEncrypt'
+//    bintrayUser = getPropertyFromLocalProperties('bintray.user')
+//    bintrayKey = getPropertyFromLocalProperties('bintray.apikey')
+//    dryRun = false
+//}
 
