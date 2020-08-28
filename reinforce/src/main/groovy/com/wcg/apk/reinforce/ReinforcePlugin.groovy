@@ -22,7 +22,7 @@ class ReinforcePlugin implements Plugin<Project> {
         ReinforceExtension extension = project.extensions.create("reinforce", ReinforceExtension)
         project.extensions.add("resguard", new ResguardExtension("resguard"))
         project.afterEvaluate {
-            if (extension.disable != null && !extension.disable) {
+            if (extension.enabled()) {
                 if (extension.sid == null || extension.sid.isEmpty()) {
                     throw new IllegalStateException("sid is null.")
                 }

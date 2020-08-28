@@ -22,11 +22,12 @@ def getPropertyFromLocalProperties(key) {
 }
 
 reinforce {
-    disable true
+    enable true
     sid getPropertyFromLocalProperties("tencent.sid")
     skey getPropertyFromLocalProperties("tencent.skey")
 
     resguard {
+        enable true
         config 'config.xml'
     }
 }
@@ -58,12 +59,13 @@ android {
 
     buildTypes {
         release {
+            signingConfig signingConfigs.debug
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
 
         debug {
-            minifyEnabled true
+            minifyEnabled false
             resValue('string', 'res_value_test', 'test_res_value')
         }
     }

@@ -8,5 +8,9 @@ class ReinforceExtension {
 
     String skey
 
-    Boolean disable
+    Boolean enable
+
+    boolean enabled() {
+        return enable != null && enable
+    }
 }

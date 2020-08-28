@@ -29,7 +29,7 @@ class ReinforceTask extends DefaultTask {
     void execute() {
 
         ReinforceExtension extension = project.extensions.getByType(ReinforceExtension)
-        if (extension.disable != null && extension.disable && resguardDisabled()) {
+        if (!extension.enabled() && resguardDisabled()) {
             project.logger.lifecycle("Reinforce: Skip run")
             return
         }
@@ -47,8 +47,7 @@ class ReinforceTask extends DefaultTask {
         reinforceDir.mkdirs()
 
         // step 1 resguard if needed
-        String resguardApkPath = reguard(signingConfig,
-                extension.disable != null && extension.disable,
+        String resguardApkPath = reguard(signingConfig, !extension.enabled(),
                 reinforceDir.absolutePath)
         if (resguardApkPath == null) {
             resguardApkPath = apkFile.absolutePath
@@ -105,7 +104,7 @@ class ReinforceTask extends DefaultTask {
     }
 
     private String reinforce(ReinforceExtension extension, String inApk) {
-        if (extension.disable != null && extension.disable) {
+        if (!extension.enabled()) {
             return inApk
         }
         def reinforce = new Reinforce.Builder(project.logger)
@@ -123,7 +122,7 @@ class ReinforceTask extends DefaultTask {
     private boolean resguardDisabled() {
         ResguardExtension resguard = project.extensions.findByName("resguard") as ResguardExtension
 
-        if (resguard == null || (resguard.disable != null && resguard.disable) || resguard.config == null) {
+        if (resguard == null || resguard.disabled()) {
             return true
         }
         File file = project.file(resguard.config)
