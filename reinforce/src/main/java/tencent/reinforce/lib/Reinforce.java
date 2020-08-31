@@ -256,7 +256,7 @@ public class Reinforce {
                         int percent = (int) (totalBytesRead * 1f / contentLength * 100);
                         if (mLastPercent != percent) {
                             mLastPercent = percent;
-                            System.out.print("\rDownloaded " + percent + "%");
+                            System.out.println("Downloaded " + percent + "%");
                         }
                     }
 

@@ -48,7 +48,7 @@ public class ProgressRequestBody extends RequestBody {
                     int percent = (int) (upload * 1f / total * 100);
                     if (mLastPercent != percent) {
                         mLastPercent = percent;
-                        System.out.print("\rUploaded " + percent + "%");
+                        System.out.println("Uploaded " + percent + "%");
                     }
                 }
             }
