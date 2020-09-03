@@ -8,8 +8,6 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
 
-        <item name="viewInflaterClass">com.spoon.string.decrypt.text.DecryptViewInflater</item>
-
         <item name="testText">@string/app_name</item>
         <item name="testText3">test_string</item>
 

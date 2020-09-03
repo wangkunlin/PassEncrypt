@@ -5,6 +5,13 @@ apply plugin: 'com.wcg.google-services'
 apply plugin: 'com.wcg.manifest-editor'
 apply plugin: 'com.wcg.proguard-dictionary'
 apply plugin: 'com.wcg.keystore-generator'
+apply plugin: 'com.wcg.string-fog'
+
+stringFog {
+    enable = true
+//    password = 'testpsw' // if not set will random
+    packages = ["com.spoon.pass.passencode"]
+}
 
 editManifest {
     application {
@@ -81,9 +88,4 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'androidx.appcompat:appcompat:1.1.0'
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
-
-    implementation 'com.wcg.field.encrypt:encrypt-api:0.0.4'
-    annotationProcessor 'com.wcg.field.encrypt:encrypt-processor:0.0.4'
-
-    implementation 'com.wcg.field.encrypt:text-decrypt:0.0.1'
 }

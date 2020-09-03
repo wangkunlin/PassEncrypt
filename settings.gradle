@@ -1,3 +1,4 @@
+include ':string-fog'
 include ':keystore-generator'
 include ':app', ':encrypt-api', ':encrypt-processor', ':string-encrypt'
 include ':rename-package'
