@@ -8,8 +8,8 @@ apply plugin: 'com.wcg.keystore-generator'
 apply plugin: 'com.wcg.string-fog'
 
 stringFog {
-    enable = true
-//    password = 'testpsw' // if not set will random
+    enable = true // default false
+//    password = 'testpsw' // if not set will random string
     packages = ["com.spoon.pass.passencode"]
 }
 

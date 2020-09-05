@@ -11,6 +11,6 @@ class FogExtension {
     String[] packages = []
 
     boolean enable() {
-        return enable != null && enable
+        return enable != null && enable && packages != null && packages.length > 0
     }
 }
