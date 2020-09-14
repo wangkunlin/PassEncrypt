@@ -29,7 +29,7 @@ apply plugin: 'com.wcg.google-services'
 
 ## keystore-generator
 
-用于编译时自动生成签名文件（如果不存在）
+用于编译时自动生成签名文件（如果不存在），现已支持不用在 build.gradle 中配置签名信息了，三个字段会随机生成
 
 root build.gradle
 
