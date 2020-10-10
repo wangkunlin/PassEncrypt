@@ -1,11 +1,9 @@
 package com.wcg.string.fog.asm
 
 import com.wcg.string.fog.FogPrinter
-import com.wcg.string.fog.PasswordGenerator
 import com.wcg.string.fog.StringField
-import org.gradle.api.logging.Logger
+import com.wcg.string.fog.utils.FogLogger
 import org.objectweb.asm.MethodVisitor
-
 /**
  * On 2020-09-03
  */
@@ -14,9 +12,9 @@ class NormalMethodVisitor extends BaseMethodVisitor {
     private List<StringField> mStaticFinalFields
     private List<StringField> mFinalFields
 
-    NormalMethodVisitor(MethodVisitor mv, String className, PasswordGenerator password, Logger logger,
+    NormalMethodVisitor(MethodVisitor mv, String className, FogLogger logger,
                         FogPrinter printer, List<StringField> staticFinalFields, List<StringField> finalFields) {
-        super(mv, className, password, logger, printer)
+        super(mv, className, logger, printer)
         mStaticFinalFields = staticFinalFields
         mFinalFields = finalFields
     }

@@ -1,4 +1,5 @@
-package com.wcg.string.fog
+package com.wcg.string.fog.utils
+
 
 import org.xxtea.XXTEA
 
@@ -55,7 +56,7 @@ class Utils {
         if (!(src instanceof String)) {
             return StringEnc.failed()
         }
-        if (src.empty) {
+        if (src.trim().empty) {
             return StringEnc.failed()
         }
         try {

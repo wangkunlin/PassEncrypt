@@ -1,4 +1,4 @@
-package com.wcg.string.fog
+package com.wcg.string.fog.utils
 
 /**
  * On 2020-09-03

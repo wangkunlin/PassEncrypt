@@ -71,7 +71,7 @@ class ReinforcePlugin implements Plugin<Project> {
         if (apkName == null) {
             throw new IllegalStateException("not found apk name")
         }
-        project.logger.lifecycle("get apk name ${apkName}")
+//        project.logger.lifecycle("get apk name ${apkName}")
         File apkFile = new File(apkDir, apkName)
         File reinforceDir = new File(apkDir, "reinforce")
 

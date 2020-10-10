@@ -1,7 +1,8 @@
 package com.wcg.string.fog
 
 import com.wcg.string.fog.asm.FogClassVisitor
-import org.gradle.api.logging.Logger
+import com.wcg.string.fog.utils.FogLogger
+import com.wcg.string.fog.utils.Utils
 import org.objectweb.asm.ClassReader
 import org.objectweb.asm.ClassVisitor
 import org.objectweb.asm.ClassWriter
@@ -17,10 +18,10 @@ import java.util.zip.ZipOutputStream
  */
 class StringFogHandler {
     private FogExtension mExtension
-    private Logger mLogger
+    private FogLogger mLogger
     private FogPrinter mPrinter
 
-    StringFogHandler(FogExtension extension, Logger logger, FogPrinter printer) {
+    StringFogHandler(FogExtension extension, FogLogger logger, FogPrinter printer) {
         mExtension = extension
         mLogger = logger
         mPrinter = printer
@@ -97,7 +98,7 @@ class StringFogHandler {
             ClassVisitor cv
             if (shouldFog(mExtension.packages, cr.className)) {
                 mLogger.lifecycle("fog class: ${cr.className}")
-                cv = new FogClassVisitor(mExtension.password, cw, mLogger, mPrinter)
+                cv = new FogClassVisitor(cw, mLogger, mPrinter)
             } else {
                 cv = cw
             }

@@ -1,10 +1,9 @@
 package com.wcg.string.fog.asm
 
 import com.wcg.string.fog.FogPrinter
-import com.wcg.string.fog.PasswordGenerator
-import com.wcg.string.fog.StringEnc
-import com.wcg.string.fog.Utils
-import org.gradle.api.logging.Logger
+import com.wcg.string.fog.utils.EncryptString
+import com.wcg.string.fog.utils.FogLogger
+import com.wcg.string.fog.utils.StringEnc
 import org.objectweb.asm.MethodVisitor
 import org.objectweb.asm.Opcodes
 
@@ -13,21 +12,19 @@ import org.objectweb.asm.Opcodes
  */
 abstract class BaseMethodVisitor extends MethodVisitor implements Opcodes, IConstants {
 
-    protected PasswordGenerator mPasswordGenerator
     protected String mClassName
-    protected Logger mLogger
+    protected FogLogger mLogger
     private FogPrinter mPrinter
 
-    BaseMethodVisitor(MethodVisitor mv, String className, PasswordGenerator password, Logger logger, FogPrinter printer) {
+    BaseMethodVisitor(MethodVisitor mv, String className, FogLogger logger, FogPrinter printer) {
         super(Opcodes.ASM5, mv)
         mClassName = className
-        mPasswordGenerator = password
         mLogger = logger
         mPrinter = printer
     }
 
     protected StringEnc encrypt(Object src) {
-        StringEnc enc = Utils.enc(src, mPasswordGenerator.gen())
+        StringEnc enc = EncryptString.instance.enc(src)
         if (enc.success) {
             mLogger.lifecycle("encrypt ${src} result: success=${enc.success}, value=${enc.enc}, password=${enc.psw}")
             mPrinter.print(mClassName, src, enc.enc, enc.psw)

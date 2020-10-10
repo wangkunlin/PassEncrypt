@@ -10,7 +10,13 @@ class FogExtension {
 
     String[] packages = []
 
-    boolean enable() {
+    boolean enabled() {
         return enable != null && enable && packages != null && packages.length > 0
+    }
+
+    Boolean printLog
+
+    boolean log() {
+        return printLog != null && printLog
     }
 }

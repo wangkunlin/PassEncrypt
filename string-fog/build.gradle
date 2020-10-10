@@ -27,7 +27,7 @@ def groupName = 'com.wcg.string.fog'
 
 def artifactName = 'string-fog'
 
-def pubVersion = '0.0.1'
+def pubVersion = '0.0.2'
 
 group = groupName
 version = pubVersion

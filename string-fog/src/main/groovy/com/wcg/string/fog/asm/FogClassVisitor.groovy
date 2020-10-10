@@ -1,10 +1,9 @@
 package com.wcg.string.fog.asm
 
 import com.wcg.string.fog.FogPrinter
-import com.wcg.string.fog.PasswordGenerator
 import com.wcg.string.fog.StringField
-import com.wcg.string.fog.Utils
-import org.gradle.api.logging.Logger
+import com.wcg.string.fog.utils.EncryptString
+import com.wcg.string.fog.utils.FogLogger
 import org.objectweb.asm.ClassVisitor
 import org.objectweb.asm.FieldVisitor
 import org.objectweb.asm.MethodVisitor
@@ -22,13 +21,11 @@ class FogClassVisitor extends ClassVisitor implements Opcodes, IConstants {
     private List<StringField> mFinalFields = new ArrayList<>()
 
     private boolean mStaticInitExists = false
-    private PasswordGenerator mPasswordGenerator
-    private Logger mLogger
+    private FogLogger mLogger
     private FogPrinter mPrinter
 
-    FogClassVisitor(String password, ClassVisitor cv, Logger logger, FogPrinter printer) {
+    FogClassVisitor(ClassVisitor cv, FogLogger logger, FogPrinter printer) {
         super(Opcodes.ASM5, cv)
-        mPasswordGenerator = new PasswordGenerator(password)
         mLogger = logger
         mPrinter = printer
     }
@@ -83,12 +80,12 @@ class FogClassVisitor extends ClassVisitor implements Opcodes, IConstants {
         MethodVisitor mv = cv.visitMethod(access, name, desc, signature, exceptions)
         if (STATIC_INIT == name) {
             mStaticInitExists = true
-            mv = new StaticInitMethodVisitor(mv, mClassName, mPasswordGenerator, mLogger, mPrinter,
+            mv = new StaticInitMethodVisitor(mv, mClassName, mLogger, mPrinter,
                     mStaticFields, mStaticFinalFields)
         } else if (INIT == name) {
-            mv = new InitMethodVisitor(mv, mClassName, mPasswordGenerator, mLogger, mPrinter)
+            mv = new InitMethodVisitor(mv, mClassName, mLogger, mPrinter)
         } else {
-            mv = new NormalMethodVisitor(mv, mClassName, mPasswordGenerator, mLogger, mPrinter,
+            mv = new NormalMethodVisitor(mv, mClassName, mLogger, mPrinter,
                     mStaticFinalFields, mFinalFields)
         }
         return mv
@@ -101,7 +98,7 @@ class FogClassVisitor extends ClassVisitor implements Opcodes, IConstants {
                     null, null)
             mv.visitCode()
             mStaticFinalFields.each {
-                def enc = Utils.enc(it.value, mPasswordGenerator.gen())
+                def enc = EncryptString.instance.enc(it.value)
                 mLogger.lifecycle("encrypt ${it.value} result: success=${enc.success}, value=${enc.enc}, password=${enc.psw}")
                 if (enc.success) {
                     mPrinter.print(mClassName, it.value, enc.enc, enc.psw)

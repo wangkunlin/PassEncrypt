@@ -3,6 +3,9 @@ package com.wcg.string.fog
 import com.android.build.api.transform.*
 import com.android.utils.FileUtils
 import com.google.common.collect.ImmutableSet
+import com.wcg.string.fog.utils.EncryptString
+import com.wcg.string.fog.utils.FogLogger
+import com.wcg.string.fog.utils.Utils
 import groovy.io.FileType
 import org.gradle.api.Project
 
@@ -65,8 +68,10 @@ class FogTransform extends Transform {
         }
 
         FogExtension extension = mProject.stringFog as FogExtension
-        mEnabled = extension.enable()
-        mFogHandler = new StringFogHandler(extension, mProject.logger, mFogPrinter)
+        mEnabled = extension.enabled()
+        FogLogger logger = new FogLogger(mProject.logger, extension.log())
+        EncryptString.password = extension.password
+        mFogHandler = new StringFogHandler(extension, logger, mFogPrinter)
 
         Set<DirectoryInput> dirInputs = new HashSet<>()
         Set<JarInput> jarInputs = new HashSet<>()

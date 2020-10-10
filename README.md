@@ -41,7 +41,7 @@ buildscript {
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:3.6.1'
-        classpath 'com.wcg.keystore.generator:keystore-generator:0.0.2'
+        classpath 'com.wcg.keystore.generator:keystore-generator:0.0.3'
     }
 }
 ```
@@ -175,6 +175,37 @@ apply plugin: 'com.wcg.rename-package'
 
 renamePackage {
     applicationId 'com.renamed.test.pkg'
+}
+```
+
+## string-fog
+
+用于将代码中的字符串混淆
+
+root build.gradle
+
+```groovy
+buildscript {
+
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:3.6.1'
+        classpath 'com.wcg.string.fog:string-fog:0.0.2'
+    }
+}
+```
+app build.gradle
+
+```groovy
+apply plugin: 'com.android.application' // required
+apply plugin: 'com.wcg.string-fog'
+
+stringFog {
+    enable = true // default false
+//    password = 'testpsw' // if not set will random string
+    packages = ["com.spoon.pass.passencode"] // 指定那些包下的类需要处理
 }
 ```
 
