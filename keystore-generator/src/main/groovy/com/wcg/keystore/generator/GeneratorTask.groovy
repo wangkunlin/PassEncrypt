@@ -1,12 +1,17 @@
 package com.wcg.keystore.generator
 
 import com.android.build.gradle.api.ApplicationVariant
+import com.android.build.gradle.internal.packaging.GradleKeystoreHelper
 import com.android.builder.core.BuilderConstants
 import com.android.builder.model.SigningConfig
+import com.android.builder.signing.DefaultSigningConfig
 import com.android.ide.common.signing.KeystoreHelper
+import com.android.utils.FileUtils
 import org.gradle.api.DefaultTask
 import org.gradle.api.tasks.OutputFile
 import org.gradle.api.tasks.TaskAction
+
+import java.security.KeyStore
 
 /**
  * On 2020-07-25
@@ -24,7 +29,10 @@ class GeneratorTask extends DefaultTask {
     @TaskAction
     void taskAction() {
         SigningConfig signingConfig = variant.signingConfig
-        if (!keystorePswFile.exists() && signingConfig.name != BuilderConstants.DEBUG) {
+        if (isDebug(signingConfig)) {
+            return
+        }
+        if (!keystorePswFile.exists()) {
             keystorePswFile.createNewFile()
 
             def pswRw = KeystorePswRw.writer()
@@ -51,6 +59,16 @@ class GeneratorTask extends DefaultTask {
             throw e
         }
 
+    }
+
+    // copy from ValidateSigningTask.isSigningConfigUsingTheDefaultDebugKeystore()
+    private static boolean isDebug(SigningConfig signingConfig) {
+        return signingConfig.name == BuilderConstants.DEBUG &&
+                signingConfig.keyAlias == DefaultSigningConfig.DEFAULT_ALIAS &&
+                signingConfig.keyPassword == DefaultSigningConfig.DEFAULT_PASSWORD &&
+                signingConfig.storePassword == DefaultSigningConfig.DEFAULT_PASSWORD &&
+                signingConfig.storeType == KeyStore.getDefaultType() &&
+                FileUtils.isSameFile(signingConfig.storeFile, GradleKeystoreHelper.defaultDebugKeystoreLocation)
     }
 
 }

@@ -15,7 +15,7 @@ stringFog {
 
 editManifest {
     application {
-        remove 'activity', 'name', 'com.spoon.pass.passencode.MainActivity'
+//        remove 'activity', 'name', 'com.spoon.pass.passencode.MainActivity'
     }
 }
 
@@ -57,7 +57,7 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
 

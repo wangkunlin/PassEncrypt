@@ -30,7 +30,7 @@ class GeneratorPlugin implements Plugin<Project> {
 
         def android = project.android as AppExtension
 
-        // android add debug and release build types: ApplicationVariantFactory.createDefaultComponents
+        // android add debug and release build types: ApplicationVariantFactory.createDefaultComponents()
         android.buildTypes.all { buildType ->
             if (buildType.name != BuilderConstants.DEBUG) {
                 buildType.signingConfig = genSigningConfigForBuildType(project, buildType)
@@ -41,9 +41,7 @@ class GeneratorPlugin implements Plugin<Project> {
         android.buildTypes.whenObjectAdded(new Action<BuildType>() {
             @Override
             void execute(BuildType buildType) {
-                if (buildType.name != BuilderConstants.DEBUG) {
-                    buildType.signingConfig = genSigningConfigForBuildType(project, buildType)
-                }
+                buildType.signingConfig = genSigningConfigForBuildType(project, buildType)
             }
         })
 
