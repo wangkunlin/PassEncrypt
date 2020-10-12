@@ -9,6 +9,7 @@
         <item name="colorAccent">@color/colorAccent</item>
 
         <item name="testText">@string/app_name</item>
+        <item name="testText2">string_1aa</item>
         <item name="testText3">test_string</item>
 
     </style>

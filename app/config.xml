@@ -5,14 +5,14 @@
         <!--whether use 7zip to repackage the signed apk, you must install the 7z command line version in window -->
         <!--sudo apt-get install p7zip-full in linux -->
         <!--and you must write the sign data fist, and i found that if we use linux, we can get a better result -->
-        <seventzip value="false"/>
+        <seventzip value="false" />
         <!--the sign data file name in your apk, default must be META-INF-->
         <!--generally, you do not need to change it if you dont change the meta file name in your apk-->
-        <metaname value="META-INF"/>
+        <metaname value="META-INF" />
         <!--if keep root, res/drawable will be kept, it won't be changed to such as r/s-->
-        <keeproot value="false"/>
+        <keeproot value="false" />
         <!--filter duplicate resource files-->
-        <mergeDuplicatedRes value="true"/>
+        <mergeDuplicatedRes value="true" />
     </issue>
 
     <!--whitelist, some resource id you can not proguard, such as getIdentifier-->
@@ -21,7 +21,7 @@
         <!--you must write the full package name, such as com.tencent.mm.R -->
         <!--for some reason, we should keep our icon better-->
         <!--and it support *, ?, such as com.tencent.mm.R.drawable.emoji_*, com.tencent.mm.R.drawable.emoji_?-->
-        <path value="com.wkl.pass.passencode123.R.mipmap.ic_launcher"/>
+        <path value="com.wkl.pass.passencode123.R.mipmap.ic_launcher" />
         <!--<path value="<your_package_name>.R.string.com.crashlytics.*"/>-->
         <!--<path value="<your_package_name>.R.string.umeng*"/>-->
         <!--<path value="<your_package_name>.R.layout.umeng*"/>-->
@@ -43,7 +43,7 @@
     <!--if you use -mapping to set keepmapping property in cammand line, these setting will be overlayed-->
     <issue id="keepmapping" isactive="false">
         <!--the old mapping path, in window use \, in linux use /, and the default path is the running location-->
-        <path value="{your_mapping_path}"/>
+        <path value="{your_mapping_path}" />
     </issue>
 
     <!--compress, if you want to compress the file, the name is relative path, such as resources.arsc, res/drawable-hdpi/welcome.png-->
@@ -51,11 +51,11 @@
     <!--isactive, whether to use compress, you can set false to close it simply-->
     <issue id="compress" isactive="false">
         <!--you must use / separation, and it support *, ?, such as *.png, *.jpg, res/drawable-hdpi/welcome_?.png-->
-        <path value="*.png"/>
-        <path value="*.jpg"/>
-        <path value="*.jpeg"/>
-        <path value="*.gif"/>
-        <path value="resources.arsc"/>
+        <path value="*.png" />
+        <path value="*.jpg" />
+        <path value="*.jpeg" />
+        <path value="*.gif" />
+        <!--        <path value="resources.arsc" />-->
     </issue>
 
 </resproguard>

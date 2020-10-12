@@ -61,7 +61,7 @@ public class Configuration {
   public String mMetaName = "META-INF";
   public String mFixedResName = null;
   public boolean mUseSignAPK = false;
-  public boolean mUseKeepMapping = false;
+//  public boolean mUseKeepMapping = false;
   public File mSignatureFile;
   public File mOldMappingFile;
   public boolean mUseWhiteList;
@@ -104,9 +104,9 @@ public class Configuration {
     if (signatureFile != null) {
       setSignData(signatureFile, keypass, storealias, storepass);
     }
-    if (mappingFile != null) {
-      setKeepMappingData(mappingFile);
-    }
+//    if (mappingFile != null) {
+//      setKeepMappingData(mappingFile);
+//    }
     // setSignData and setKeepMappingData must before readXmlConfig or it will read
     readXmlConfig(config);
     this.m7zipPath = sevenzipPath;
@@ -128,10 +128,10 @@ public class Configuration {
     if (param.useSign) {
       setSignData(param.signFile, param.keypass, param.storealias, param.storepass);
     }
-    if (param.mappingFile != null) {
-      mUseKeepMapping = true;
-      setKeepMappingData(param.mappingFile);
-    }
+//    if (param.mappingFile != null) {
+//      mUseKeepMapping = true;
+//      setKeepMappingData(param.mappingFile);
+//    }
     for (String item : param.whiteList) {
       mUseWhiteList = true;
       addWhiteList(item);
@@ -163,18 +163,18 @@ public class Configuration {
     mStorePass = storepass;
   }
 
-  private void setKeepMappingData(File mappingFile) throws IOException {
-    if (mUseKeepMapping) {
-      mOldMappingFile = mappingFile;
-
-      if (!mOldMappingFile.exists()) {
-        throw new IOException(String.format("the old mapping file do not exit, raw path= %s",
-            mOldMappingFile.getAbsolutePath()
-        ));
-      }
-      processOldMappingFile();
-    }
-  }
+//  private void setKeepMappingData(File mappingFile) throws IOException {
+//    if (mUseKeepMapping) {
+//      mOldMappingFile = mappingFile;
+//
+//      if (!mOldMappingFile.exists()) {
+//        throw new IOException(String.format("the old mapping file do not exit, raw path= %s",
+//            mOldMappingFile.getAbsolutePath()
+//        ));
+//      }
+//      processOldMappingFile();
+//    }
+//  }
 
   private void readXmlConfig(File xmlConfigFile) throws IOException, ParserConfigurationException, SAXException {
     if (!xmlConfigFile.exists()) {
@@ -227,10 +227,10 @@ public class Configuration {
             }
             break;
           case MAPPING_ISSUE:
-            mUseKeepMapping = active;
-            if (mUseKeepMapping) {
-              loadMappingFilesFromXml(node);
-            }
+//            mUseKeepMapping = active;
+//            if (mUseKeepMapping) {
+//              loadMappingFilesFromXml(node);
+//            }
             break;
           default:
             System.err.println("unknown issue " + id);

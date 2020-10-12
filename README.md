@@ -127,7 +127,7 @@ buildscript {
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:3.6.1'
-        classpath 'com.wcg.apk.reinforce:reinforce:0.0.13'
+        classpath 'com.wcg.apk.reinforce:reinforce:0.0.14'
     }
 }
 ```
