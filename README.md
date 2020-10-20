@@ -1,6 +1,6 @@
 # 使用方法
 
-最早是基于 AGP 3.6.1 开发，已经适配 4.0.1
+基于 AGP 3.6.1 开发，已适配 4.0.1
 
 ## google-services
 
@@ -41,7 +41,7 @@ buildscript {
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:3.6.1'
-        classpath 'com.wcg.keystore.generator:keystore-generator:0.0.3'
+        classpath 'com.wcg.keystore.generator:keystore-generator:0.0.4'
     }
 }
 ```
@@ -163,7 +163,7 @@ buildscript {
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:3.6.1'
-        classpath 'com.wcg.field.encrypt:rename-package:0.0.2'
+        classpath 'com.wcg.field.encrypt:rename-package:0.0.3'
     }
 }
 ```
@@ -192,7 +192,7 @@ buildscript {
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:3.6.1'
-        classpath 'com.wcg.string.fog:string-fog:0.0.2'
+        classpath 'com.wcg.string.fog:string-fog:0.0.3'
     }
 }
 ```

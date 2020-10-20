@@ -18,19 +18,21 @@ class RenamePlugin implements Plugin<Project> {
         RenameExtension extension = project.extensions.create("renamePackage", RenameExtension)
 
         project.afterEvaluate {
-            AppExtension android = project.android
-            def variants = android.applicationVariants
-            variants.all { variant ->
-                boolean debuggable = variant.buildType.debuggable
-                if (!debuggable) {
-                    if (variant.variantData.metaClass.respondsTo(variant, "variantConfiguration") ||
-                            variant.variantData.metaClass.hasProperty(variant, "variantConfiguration")) {
-                        variant.variantData.variantConfiguration.defaultConfig.applicationId = extension.applicationId
-                        variant.variantData.variantConfiguration.mergedFlavor.applicationId = extension.applicationId
-                    } else if (variant.variantData.metaClass.respondsTo(variant, "variantDslInfo") ||
-                            variant.variantData.metaClass.hasProperty(variant, "variantDslInfo")) {
-                        variant.variantData.variantDslInfo.defaultConfig.applicationId = extension.applicationId
-                        variant.variantData.variantDslInfo.mergedFlavor.applicationId = extension.applicationId
+            if (extension.applicationId != null && !extension.applicationId.empty) {
+                AppExtension android = project.android
+                def variants = android.applicationVariants
+                variants.all { variant ->
+                    boolean debuggable = variant.buildType.debuggable
+                    if (!debuggable) {
+                        if (variant.variantData.metaClass.respondsTo(variant, "variantConfiguration") ||
+                                variant.variantData.metaClass.hasProperty(variant, "variantConfiguration")) {
+                            variant.variantData.variantConfiguration.defaultConfig.applicationId = extension.applicationId
+                            variant.variantData.variantConfiguration.mergedFlavor.applicationId = extension.applicationId
+                        } else if (variant.variantData.metaClass.respondsTo(variant, "variantDslInfo") ||
+                                variant.variantData.metaClass.hasProperty(variant, "variantDslInfo")) {
+                            variant.variantData.variantDslInfo.defaultConfig.applicationId = extension.applicationId
+                            variant.variantData.variantDslInfo.mergedFlavor.applicationId = extension.applicationId
+                        }
                     }
                 }
             }

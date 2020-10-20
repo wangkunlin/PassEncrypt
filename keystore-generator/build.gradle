@@ -23,7 +23,7 @@ def groupName = 'com.wcg.keystore.generator'
 
 def artifactName = 'keystore-generator'
 
-def pubVersion = '0.0.3'
+def pubVersion = '0.0.4'
 
 group = groupName
 version = pubVersion

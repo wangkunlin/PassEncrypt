@@ -99,7 +99,7 @@ class GeneratorPlugin implements Plugin<Project> {
         String name = variant.name
         String capName = name.capitalize()
 
-        String generatorTaskName = "generat${capName}Keystore"
+        String generatorTaskName = "generate${capName}Keystore"
 
         GeneratorTask generatorTask = project.tasks.create(generatorTaskName, GeneratorTask)
         def storeFile = variant.signingConfig.storeFile

@@ -1,5 +1,5 @@
 apply plugin: 'groovy'
-//apply plugin: 'com.novoda.bintray-release'
+apply plugin: 'com.novoda.bintray-release'
 apply plugin: 'maven'
 apply plugin: 'maven-publish'
 
@@ -23,7 +23,7 @@ def groupName = 'com.wcg.field.encrypt'
 
 def artifactName = 'rename-package'
 
-def pubVersion = '0.0.2'
+def pubVersion = '0.0.3'
 
 group = groupName
 version = pubVersion
@@ -36,16 +36,16 @@ uploadArchives {
     }
 }
 
-//publish {
-//    userOrg = 'wangkunlin1992'
-//    groupId = groupName
-//    artifactId = artifactName
-//    publishVersion = pubVersion
-//    uploadName = groupName + ':' + artifactName
-//    desc = 'a gradle plugin to rename android package name, only works on debuggable = false'
-//    website = 'https://github.com/wangkunlin/PassEncrypt'
-//    bintrayUser = getPropertyFromLocalProperties('bintray.user')
-//    bintrayKey = getPropertyFromLocalProperties('bintray.apikey')
-//    dryRun = false
-//}
+publish {
+    userOrg = 'wangkunlin1992'
+    groupId = groupName
+    artifactId = artifactName
+    publishVersion = pubVersion
+    uploadName = groupName + ':' + artifactName
+    desc = 'a gradle plugin to rename android package name, only works on debuggable = false'
+    website = 'https://github.com/wangkunlin/PassEncrypt'
+    bintrayUser = getPropertyFromLocalProperties('bintray.user')
+    bintrayKey = getPropertyFromLocalProperties('bintray.apikey')
+    dryRun = false
+}
 

@@ -1,11 +1,6 @@
-./gradlew clean :encrypt-api:bintrayUpload
-./gradlew clean :encrypt-processor:bintrayUpload
-./gradlew clean :string-encrypt:bintrayUpload
 ./gradlew clean :rename-package:bintrayUpload
-./gradlew clean :text-decrypt:bintrayUpload
-./gradlew clean :text-decrypt-support:bintrayUpload
 ./gradlew clean :reinforce:bintrayUpload
 ./gradlew clean :google-services:bintrayUpload
-./gradlew clean :manifest-editor:bintrayUpload
 ./gradlew clean :proguard-dictionary:bintrayUpload
 ./gradlew clean :keystore-generator:bintrayUpload
+./gradlew clean :string-fog:bintrayUpload

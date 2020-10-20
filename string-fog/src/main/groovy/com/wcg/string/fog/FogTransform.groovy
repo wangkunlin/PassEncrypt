@@ -1,6 +1,7 @@
 package com.wcg.string.fog
 
 import com.android.build.api.transform.*
+import com.android.build.api.variant.VariantInfo
 import com.android.utils.FileUtils
 import com.google.common.collect.ImmutableSet
 import com.wcg.string.fog.utils.EncryptString
@@ -23,6 +24,15 @@ class FogTransform extends Transform {
 
     FogTransform(Project project) {
         mProject = project
+    }
+
+    @Override
+    boolean applyToVariant(VariantInfo variant) {
+        FogExtension extension = mProject.stringFog as FogExtension
+        if (variant.debuggable) {
+            return extension.debugEnabled()
+        }
+        return true
     }
 
     @Override
