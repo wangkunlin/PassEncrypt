@@ -6,6 +6,16 @@ apply plugin: 'com.wcg.manifest-editor'
 apply plugin: 'com.wcg.proguard-dictionary'
 apply plugin: 'com.wcg.keystore-generator'
 apply plugin: 'com.wcg.string-fog'
+apply plugin: 'com.wcg.aab-resguard'
+
+aabResGuard {
+    whiteList = [ // White list rules
+                  "*.R.raw.*",
+                  "*.R.drawable.icon"
+    ]
+    obfuscatedBundleFileName = "duplicated-app.aab" // Obfuscated file name, must end with '.aab'
+    mergeDuplicatedRes = true // Whether to allow the merge of duplicate resources
+}
 
 stringFog {
     enable = true // default false

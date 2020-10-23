@@ -21,6 +21,7 @@ buildscript {
         classpath 'com.wcg.proguard.dictionary:proguard-dictionary:0.0.3'
         classpath 'com.wcg.keystore.generator:keystore-generator:0.0.2'
         classpath 'com.wcg.string.fog:string-fog:0.0.2'
+        classpath 'com.wcg.aab.resguard:aab-resguard:0.0.1'
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
