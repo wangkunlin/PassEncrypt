@@ -209,3 +209,46 @@ stringFog {
 }
 ```
 
+## aab-resguard
+
+用于混淆 aab 打包的资源混淆
+
+root build.gradle
+
+```groovy
+buildscript {
+
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:3.6.1'
+        classpath 'com.wcg.aab.resguard:aab-resguard:0.0.1'
+    }
+}
+```
+app build.gradle
+
+```groovy
+apply plugin: 'com.android.application' // required
+apply plugin: 'com.wcg.aab-resguard'
+
+aabResGuard {
+    mappingFile = file("mapping.txt").toPath() // 用于增量混淆的 mapping 文件
+    whiteList = [ // 白名单规则
+        "*.R.raw.*",
+        "*.R.drawable.icon"
+    ]
+    obfuscatedBundleFileName = "duplicated-app.aab" // 混淆后的文件名称，必须以 `.aab` 结尾
+    mergeDuplicatedRes = true // 是否允许去除重复资源
+    enableFilterFiles = true // 是否允许过滤文件
+    filterList = [ // 文件过滤规则
+        "*/arm64-v8a/*",
+        "META-INF/*"
+    ]
+    enableFilterStrings = false // 过滤文案
+    unusedStringPath = file("unused.txt").toPath() // 过滤文案列表路径 默认在mapping同目录查找
+    languageWhiteList = ["en", "zh"] // 保留en,en-xx,zh,zh-xx等语言，其余均删除
+}
+```
+
