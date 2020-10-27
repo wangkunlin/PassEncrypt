@@ -1,10 +1,10 @@
 # 使用方法
 
-基于 AGP 3.6.1 开发，已适配 4.0.1
+基于 AGP 3.6.1 开发，已适配 4.0.1，下面的配置只是把所有的可配置项列出来了，在使用时，不要无脑复制
 
 ## google-services
 
-如果需要使用 firebase 相关功能，则需要添加此插件
+如果需要使用 firebase 相关功能，此插件可以使 debug 打包不解析 google-services.json 文件，而 release 解析
 
 root build.gradle
 
@@ -29,7 +29,7 @@ apply plugin: 'com.wcg.google-services'
 
 ## keystore-generator
 
-用于编译时自动生成签名文件（如果不存在），现已支持不用在 build.gradle 中配置签名信息了，三个字段会随机生成
+用于编译时自动生成签名文件，app/build.gradle 中不需要配置任何签名信息
 
 root build.gradle
 
@@ -52,41 +52,9 @@ apply plugin: 'com.android.application' // required
 apply plugin: 'com.wcg.keystore-generator'
 ```
 
-## manifest-editor
-
-可以在编译时修改 manifest 文件
-
-root build.gradle
-
-```groovy
-buildscript {
-
-    repositories {
-        jcenter()
-    }
-    dependencies {
-        classpath 'com.android.tools.build:gradle:3.6.1'
-        classpath 'com.wcg.manifest.editor:manifest-editor:0.0.3'
-    }
-}
-```
-app build.gradle
-
-```groovy
-apply plugin: 'com.android.application' // required
-apply plugin: 'com.wcg.manifest-editor'
-
-editManifest {
-    application {
-    	// 移除 com.spoon.pass.passencode.MainActivity
-        remove 'activity', 'name', 'com.spoon.pass.passencode.MainActivity'
-    }
-}
-```
-
 ## proguard-dictionary
 
-可以在编译时动态生成混淆字典
+在编译时动态生成混淆字典
 
 root build.gradle
 
@@ -110,42 +78,7 @@ apply plugin: 'com.wcg.proguard-dictionary'
 
 dictionary { // 可以不定义这个闭包, count 默认 8000
     count 10000
-}
-```
-
-## apk-reinforce
-
-提供 apk 打包后的 [AndResGuard](https://github.com/shwenzhang/AndResGuard/blob/master/README.zh-cn.md) 和 腾讯乐固 加固功能
-
-root build.gradle
-
-```groovy
-buildscript {
-
-    repositories {
-        jcenter()
-    }
-    dependencies {
-        classpath 'com.android.tools.build:gradle:3.6.1'
-        classpath 'com.wcg.apk.reinforce:reinforce:0.0.14'
-    }
-}
-```
-app build.gradle
-
-```groovy
-apply plugin: 'com.android.application' // required
-apply plugin: 'com.wcg.apk-reinforce'
-
-reinforce {
-    enable true // 默认关闭
-    sid 'tencent.sid'
-    skey 'tencent.skey'
-
-    resguard {
-        enable true
-        config 'config.xml' // resguard 配置文件
-    }
+    fromChars = "1ilILuc" // 指定字生成字典的字符有哪些，不配置随机生成
 }
 ```
 
@@ -203,15 +136,16 @@ apply plugin: 'com.android.application' // required
 apply plugin: 'com.wcg.string-fog'
 
 stringFog {
-    enable = true // default false
-//    password = 'testpsw' // if not set will random string
-    packages = ["com.spoon.pass.passencode"] // 指定那些包下的类需要处理
+    enable = true // 总开关，默认 false
+//    password = 'testpsw' // 如果不设置，则使用随机密码，最好随机
+    packages = ["com.spoon.pass.passencode"] // 指定哪些包下的类需要处理
+    debugEnable = true // 默认 debug 不启用
 }
 ```
 
 ## aab-resguard
 
-用于混淆 aab 打包的资源混淆
+用于 aab 打包的资源混淆，配置参考[aab-resguard](https://github.com/bytedance/AabResGuard/blob/develop/wiki/zh-cn/README.md)
 
 root build.gradle
 
