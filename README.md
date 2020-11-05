@@ -2,6 +2,31 @@
 
 基于 AGP 3.6.1 开发，已适配 4.0.1，下面的配置只是把所有的可配置项列出来了，在使用时，不要无脑复制
 
+## only-debug
+
+值允许打 debug 包
+
+root build.gradle
+
+```groovy
+buildscript {
+
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:3.6.1'
+        classpath 'com.wcg.only.debug:only-debug:0.0.1'
+    }
+}
+```
+app build.gradle
+
+```groovy
+apply plugin: 'com.android.application' // required
+apply plugin: 'com.wcg.only-debug'
+```
+
 ## google-services
 
 如果需要使用 firebase 相关功能，此插件可以使 debug 打包不解析 google-services.json 文件，而 release 解析
