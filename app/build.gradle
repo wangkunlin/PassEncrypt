@@ -3,6 +3,7 @@ apply plugin: 'com.wcg.proguard-dictionary'
 apply plugin: 'com.wcg.keystore-generator'
 apply plugin: 'com.wcg.string-fog'
 apply plugin: 'com.wcg.aab-resguard'
+apply plugin: 'com.wcg.only-debug'
 
 aabResGuard {
     whiteList = [ // White list rules

@@ -1,0 +1,51 @@
+apply plugin: 'groovy'
+apply plugin: 'com.novoda.bintray-release'
+apply plugin: 'maven'
+apply plugin: 'maven-publish'
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation gradleApi()
+    implementation localGroovy()
+    compileOnly 'com.android.tools.build:gradle:4.1.0'
+}
+
+def getPropertyFromLocalProperties(key) {
+    File file = project.rootProject.file('local.properties')
+    if (file.exists()) {
+        Properties properties = new Properties()
+        properties.load(file.newDataInputStream())
+        return properties.getProperty(key)
+    }
+}
+
+def groupName = 'com.wcg.only.debug'
+
+def artifactName = 'only-debug'
+
+def pubVersion = '0.0.1'
+
+group = groupName
+version = pubVersion
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            repository(url: uri("../repo"))
+        }
+    }
+}
+
+publish {
+    userOrg = 'wangkunlin1992'
+    groupId = groupName
+    artifactId = artifactName
+    publishVersion = pubVersion
+    uploadName = groupName + ':' + artifactName
+    desc = 'a gradle plugin to enforce only debug build'
+    website = 'https://github.com/wangkunlin/PassEncrypt'
+    bintrayUser = getPropertyFromLocalProperties('bintray.user')
+    bintrayKey = getPropertyFromLocalProperties('bintray.apikey')
+    dryRun = false
+}
+
