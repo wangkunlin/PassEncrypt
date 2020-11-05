@@ -1,5 +1,3 @@
-./gradlew clean :rename-package:bintrayUpload
-./gradlew clean :reinforce:bintrayUpload
 ./gradlew clean :google-services:bintrayUpload
 ./gradlew clean :proguard-dictionary:bintrayUpload
 ./gradlew clean :keystore-generator:bintrayUpload

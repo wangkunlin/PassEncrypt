@@ -1,14 +1,12 @@
 package com.wcg.aab.resguard
 
 import com.android.build.gradle.api.ApplicationVariant
-import com.android.build.gradle.internal.scope.VariantScope
 import com.android.builder.model.SigningConfig
 import com.bytedance.android.aabresguard.commands.ObfuscateBundleCommand
 import org.gradle.api.DefaultTask
 import org.gradle.api.tasks.TaskAction
 
 import java.nio.file.Path
-
 /**
  * On 2020-10-22
  */
@@ -21,14 +19,13 @@ class AabResGuardTask extends DefaultTask {
     }
 
     ApplicationVariant variant
-    VariantScope variantScope
     Path bundlePath
     Path obfuscatedBundlePath
     AabResGuardExtension aabResGuard
     SigningConfig signingConfig
 
-    void setVariantScope(VariantScope scope) {
-        variantScope = scope
+    void setVariant(ApplicationVariant variant) {
+        this.variant = variant
         bundlePath = BundleUtil.getBundleFilePath(project, variant.name.capitalize())
         aabResGuard = project.aabResGuard
         obfuscatedBundlePath = new File(bundlePath.toFile().parentFile,

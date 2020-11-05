@@ -82,35 +82,6 @@ dictionary { // 可以不定义这个闭包, count 默认 8000
 }
 ```
 
-## rename-package
-
-用于修改当 [buildType|Flavor] debuggable == false 的 applicationId
-
-root build.gradle
-
-```groovy
-buildscript {
-
-    repositories {
-        jcenter()
-    }
-    dependencies {
-        classpath 'com.android.tools.build:gradle:3.6.1'
-        classpath 'com.wcg.field.encrypt:rename-package:0.0.3'
-    }
-}
-```
-app build.gradle
-
-```groovy
-apply plugin: 'com.android.application' // required
-apply plugin: 'com.wcg.rename-package'
-
-renamePackage {
-    applicationId 'com.renamed.test.pkg'
-}
-```
-
 ## string-fog
 
 用于将代码中的字符串混淆
@@ -157,7 +128,7 @@ buildscript {
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:3.6.1'
-        classpath 'com.wcg.aab.resguard:aab-resguard:0.0.1'
+        classpath 'com.wcg.aab.resguard:aab-resguard:0.0.2'
     }
 }
 ```
