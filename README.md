@@ -66,7 +66,7 @@ buildscript {
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:3.6.1'
-        classpath 'com.wcg.keystore.generator:keystore-generator:0.0.4'
+        classpath 'com.wcg.keystore.generator:keystore-generator:0.0.5'
     }
 }
 ```

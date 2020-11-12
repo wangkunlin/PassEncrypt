@@ -85,7 +85,7 @@ class CheckDebugPlugin implements Plugin<Project> {
         taskNames.forEach { taskName ->
             String lowerTaskName = taskName.toLowerCase()
             if (lowerTaskName.contains(variantLower)) {
-                if (!lowerTaskName.contains(PUBLISHING)) {
+                if (!lowerTaskName.startsWith(PUBLISHING)) {
                     throw new GradleException("Can not build project with variant name: ${variant.name}")
                 }
             }

@@ -1,5 +1,5 @@
 apply plugin: 'groovy'
-//apply plugin: 'com.novoda.bintray-release'
+apply plugin: 'com.novoda.bintray-release'
 apply plugin: 'maven'
 apply plugin: 'maven-publish'
 
@@ -7,7 +7,7 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation gradleApi()
     implementation localGroovy()
-    compileOnly 'com.android.tools.build:gradle:3.6.1'
+    compileOnly 'com.android.tools.build:gradle:4.1.0'
 }
 
 def getPropertyFromLocalProperties(key) {
@@ -23,7 +23,7 @@ def groupName = 'com.wcg.keystore.generator'
 
 def artifactName = 'keystore-generator'
 
-def pubVersion = '0.0.4'
+def pubVersion = '0.0.5'
 
 group = groupName
 version = pubVersion
@@ -36,15 +36,15 @@ uploadArchives {
     }
 }
 
-//publish {
-//    userOrg = 'wangkunlin1992'
-//    groupId = groupName
-//    artifactId = artifactName
-//    publishVersion = pubVersion
-//    uploadName = groupName + ':' + artifactName
-//    desc = 'a gradle plugin to generate missing key store'
-//    website = 'https://github.com/wangkunlin/PassEncrypt'
-//    bintrayUser = getPropertyFromLocalProperties('bintray.user')
-//    bintrayKey = getPropertyFromLocalProperties('bintray.apikey')
-//    dryRun = false
-//}
+publish {
+    userOrg = 'wangkunlin1992'
+    groupId = groupName
+    artifactId = artifactName
+    publishVersion = pubVersion
+    uploadName = groupName + ':' + artifactName
+    desc = 'a gradle plugin to generate missing key store'
+    website = 'https://github.com/wangkunlin/PassEncrypt'
+    bintrayUser = getPropertyFromLocalProperties('bintray.user')
+    bintrayKey = getPropertyFromLocalProperties('bintray.apikey')
+    dryRun = false
+}

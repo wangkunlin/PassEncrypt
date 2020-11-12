@@ -1,7 +1,6 @@
 package com.wcg.keystore.generator
 
 import com.android.build.gradle.api.ApplicationVariant
-import com.android.build.gradle.internal.packaging.GradleKeystoreHelper
 import com.android.builder.core.BuilderConstants
 import com.android.builder.model.SigningConfig
 import com.android.builder.signing.DefaultSigningConfig
@@ -68,7 +67,7 @@ class GeneratorTask extends DefaultTask {
                 signingConfig.keyPassword == DefaultSigningConfig.DEFAULT_PASSWORD &&
                 signingConfig.storePassword == DefaultSigningConfig.DEFAULT_PASSWORD &&
                 signingConfig.storeType == KeyStore.getDefaultType() &&
-                FileUtils.isSameFile(signingConfig.storeFile, GradleKeystoreHelper.defaultDebugKeystoreLocation)
+                FileUtils.isSameFile(signingConfig.storeFile, new File(KeystoreHelper.defaultDebugKeystoreLocation()))
     }
 
 }

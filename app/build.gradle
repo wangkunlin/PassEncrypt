@@ -12,6 +12,10 @@ aabResGuard {
     ]
     obfuscatedBundleFileName = "duplicated-app.aab" // Obfuscated file name, must end with '.aab'
     mergeDuplicatedRes = true // Whether to allow the merge of duplicate resources
+    enableFilterFiles = true // Whether to allow filter files
+    filterList = [ // file filter rules
+                   "*/proguard.map"
+    ]
 }
 
 stringFog {
@@ -39,7 +43,8 @@ android {
         }
 
         debug {
-            resValue('string', 'res_value_test', 'test_res_value')
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
 
